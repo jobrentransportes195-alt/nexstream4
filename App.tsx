@@ -1,4 +1,4 @@
-
+import { supabase } from ' ./services/supabase';
 import React, { useState, useEffect, useCallback } from 'react';
 import { MemoryRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AppRoute, User, Channel, AuthState } from './types';
@@ -15,16 +15,29 @@ import ChannelManagement from './components/Admin/ChannelManagement';
 const DEFAULT_CHANNELS: Channel[] = [];
 
 const App: React.FC = () => {
-  const [authState, setAuthState] = useState<AuthState>(() => {
-    const saved = localStorage.getItem('nexstream_auth');
-    return saved ? JSON.parse(saved) : { user: null, isAdmin: false, isAuthenticated: false };
-  });
+  
 
-  const [channels, setChannels] = useState<Channel[]>(() => {
-    const saved = localStorage.getItem('nexstream_channels');
-    const parsed = saved ? JSON.parse(saved) : [];
-    return parsed.length > 0 ? parsed : DEFAULT_CHANNELS;
-  });
+  const [authState, setAuthState] = useState<AuthState>({
+  user: null,
+  isAdmin: false,
+  isAuthenticated: false
+});
+
+useEffect(() => {
+  const checkUser = async () => {
+    const { data } = await supabase.auth.getUser();
+
+    if (data.user) {
+      setAuthState({
+        user: data.user,
+        isAdmin: false,
+        isAuthenticated: true
+      });
+    }
+  };
+
+  checkUser();
+}, []);
 
   useEffect(() => {
     localStorage.setItem('nexstream_auth', JSON.stringify(authState));
