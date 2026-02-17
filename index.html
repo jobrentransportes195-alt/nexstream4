@@ -55,5 +55,29 @@
 <body class="no-scrollbar">
     <div id="root"></div>
 <script type="module" src="/index.tsx"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+const supabaseUrl = 'COLE_SUA_URL_AQUI'
+const supabaseKey = 'COLE_SUA_ANON_KEY_AQUI'
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+window.login = async function() {
+  const email = document.getElementById("email").value
+  const senha = document.getElementById("senha").value
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: senha
+  })
+
+  if (error) {
+    alert("Usuário não encontrado ou senha incorreta")
+  } else {
+    window.location.href = "home.html"
+  }
+}
+</script>  
 </body>
 </html>
