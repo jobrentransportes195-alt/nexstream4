@@ -1,0 +1,8 @@
+{
+  "name": "NexStream Pro",
+  "description": "Professional IPTV/Streaming ecosystem with Netflix-style TV interface and advanced admin dashboard for user and playlist management.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
