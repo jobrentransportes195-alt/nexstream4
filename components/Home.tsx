@@ -31,6 +31,7 @@ const [search, setSearch] = useState("");
             key={item.title}
             className="card"
             onClick={() => navigate(`/filme/${item.id}`)}
+>
             <img src={item.image} />
             <div className="card-info">
               <h4>{item.title}</h4>
