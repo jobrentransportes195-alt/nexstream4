@@ -1,6 +1,7 @@
 import { Routes, Route, NavLink } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import MoviePage from "./components/MoviePage";
 import { useState } from "react";
 
 export default function App() {
