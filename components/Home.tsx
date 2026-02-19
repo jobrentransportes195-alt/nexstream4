@@ -3,16 +3,32 @@ import { useNavigate } from "react-router-dom";
 import { content } from "../data/content";
 import SearchBar from "./SearchBar";
 
-export default function Home() {
+interface HomeProps {
+  category?: string;
+}
+
+export default function Home({ category }: HomeProps) {
+
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  const filteredContent = content.filter(item =>
+  let filteredContent = content;
+
+  // 🔎 Filtro por categoria (mantido)
+  if (category && category !== "Home") {
+    filteredContent = filteredContent.filter(
+      item => item.category === category
+    );
+  }
+
+  // 🔎 Filtro por busca (mantido)
+  filteredContent = filteredContent.filter(item =>
     item.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="home-container">
+
       <SearchBar onSearch={setSearch} />
 
       <div className="grid-container">
@@ -30,6 +46,7 @@ export default function Home() {
           </div>
         ))}
       </div>
+
     </div>
   );
 }
