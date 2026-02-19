@@ -18,4 +18,8 @@ export default function App() {
         <Route path="/filmes" element={<Home category="Filmes" />} />
         <Route path="/series" element={<Home category="Séries" />} />
         <Route path="/tv" element={<Home category="TV" />} />
-        <Route path="/filme/:id" element={<MoviePage
+        <Route path="/filme/:id" element={<MoviePage />} />
+      </Routes>
+    </>
+  );
+}
