@@ -1,49 +1,51 @@
 import { useState } from "react";
-
-const categories = {
-  "TV Ao Vivo": ["Globo", "SBT", "Record"],
-  "Filmes": ["Vingadores", "Avatar", "Batman"],
-  "Séries": ["Breaking Bad", "La Casa de Papel", "Dark"],
-  "Esportes": ["ESPN", "Sportv"],
-  "Infantil": ["Cartoon Network", "Nickelodeon"]
-};
+import { content } from "../data/content";
+import Player from "./Player";
+import SearchBar from "./SearchBar";
 
 export default function Home() {
-  const [favorites, setFavorites] = useState<string[]>(
-    JSON.parse(localStorage.getItem("favorites") || "[]")
-  );
+  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<any>(null);
 
-  const toggleFavorite = (item: string) => {
-    let updated;
-    if (favorites.includes(item)) {
-      updated = favorites.filter(f => f !== item);
-    } else {
-      updated = [...favorites, item];
-    }
-    setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
-  };
+  const filtered = content.filter(
+    (item) =>
+      item.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <>
-      {Object.entries(categories).map(([category, items]) => (
-        <div className="section" key={category}>
-          <h2>{category}</h2>
-          <div className="row">
-            {items.map(item => (
-              <div className="card" key={item}>
-                <button
-                  className="favorite-btn"
-                  onClick={() => toggleFavorite(item)}
-                >
-                  {favorites.includes(item) ? "✔" : "♡"}
-                </button>
-                <div className="card-title">{item}</div>
-              </div>
-            ))}
+    <div style={{ padding: "20px" }}>
+      <SearchBar onSearch={setSearch} />
+
+      <div style={grid}>
+        {filtered.map((item) => (
+          <div
+            key={item.title}
+            style={card}
+            onClick={() => setSelected(item)}
+          >
+            <img src={item.image} style={{ width: "100%", borderRadius:"8px" }} />
+            <h4>{item.title}</h4>
+            <p>⭐ {item.rating}</p>
           </div>
-        </div>
-      ))}
-    </>
+        ))}
+      </div>
+
+      {selected && <Player url={selected.video} />}
+    </div>
   );
 }
+
+const grid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+  gap: "20px",
+  marginTop: "20px"
+};
+
+const card = {
+  background: "#222",
+  padding: "10px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  transition: "0.3s"
+};
