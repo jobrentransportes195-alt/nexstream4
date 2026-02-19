@@ -4,7 +4,8 @@ import Player from "./Player";
 import SearchBar from "./SearchBar";
 
 export default function Home({ category }: any) {
-  const navigate = useNavigate();
+  
+const navigate = useNavigate();
 const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<any>(null);
 
