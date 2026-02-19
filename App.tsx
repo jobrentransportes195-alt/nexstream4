@@ -1,34 +1,23 @@
-import { Routes, Route, NavLink } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
-import Login from "./components/Login";
 import MoviePage from "./components/MoviePage";
-import { useState } from "react";
+import Login from "./components/Login";
+import Header from "./components/Header";
 
-export default function App() {
-  const [user, setUser] = useState<any>(true); // deixe true para não ir para login agora
-
-  if (!user) {
-    return <Login onLogin={setUser} />;
-  }
-
+function App() {
   return (
-    <>
-      <div className="navbar">
-        <h2 className="logo">NexStream</h2>
+    <BrowserRouter>
+      <div style={{ backgroundColor: "#000", minHeight: "100vh" }}>
+        <Header />
 
-        <NavLink to="/" end>Home</NavLink>
-        <NavLink to="/tv">TV Ao Vivo</NavLink>
-        <NavLink to="/filmes">Filmes</NavLink>
-        <NavLink to="/series">Séries</NavLink>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/filme/:id" element={<MoviePage />} />
+        </Routes>
       </div>
-
-      <Routes>
-        <Route path="/" element={<Home category="Home" />} />
-        <Route path="/tv" element={<Home category="TV Ao Vivo" />} />
-        <Route path="/filmes" element={<Home category="Filmes" />} />
-        <Route path="/series" element={<Home category="Séries" />} />
-    <Route path="/filme/:id" element={<MoviePage />} /> 
-     </Routes>
-    </>
+    </BrowserRouter>
   );
 }
+
+export default App;
