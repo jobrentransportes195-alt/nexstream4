@@ -1,0 +1,38 @@
+body {
+  margin: 0;
+  background-color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+}
+
+h1, h2, h3 {
+  color: white;
+}
+
+button {
+  background-color: #e50914;
+  border: none;
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.navbar {
+  display: flex;
+  gap: 10px;
+  background-color: #000;
+  padding: 10px;
+}
+
+.navbar button {
+  background: #222;
+}
+
+.container {
+  padding: 20px;
+}
