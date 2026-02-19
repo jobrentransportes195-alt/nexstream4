@@ -30,8 +30,7 @@ const [search, setSearch] = useState("");
           <div
             key={item.title}
             className="card"
-            onClick={() => setSelected(item)}
-          >
+            onClick={() => navigate(`/filme/${item.id}`)}
             <img src={item.image} />
             <div className="card-info">
               <h4>{item.title}</h4>
