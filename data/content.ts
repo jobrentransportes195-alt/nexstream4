@@ -1,4 +1,5 @@
 export const content = [
+  // FILMES
   {
     title: "Avatar",
     category: "Filmes",
@@ -7,10 +8,14 @@ export const content = [
     rating: 5
   },
   {
-    title: "Breaking Bad",
-    category: "Séries",
-    image: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+    title: "Batman",
+    category: "Filmes",
+    image: "https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg",
     video: "https://www.w3schools.com/html/movie.mp4",
-    rating: 5
-  }
-];
+    rating: 4
+  },
+
+  // SÉRIES
+  {
+    title: "Breaking Bad",
+    category
