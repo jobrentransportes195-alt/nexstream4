@@ -1,21 +1,21 @@
 import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
 import Home from "./components/Home";
 import MoviePage from "./components/MoviePage";
-import Login from "./components/Login";
-import Header from "./components/Header";
 
-function App() {
+export default function App() {
+  const handleLogout = () => {
+    alert("Logout realizado");
+  };
+
   return (
-    <div style={{ backgroundColor: "#000", minHeight: "100vh" }}>
-      <Header />
+    <>
+      <Header onLogout={handleLogout} />
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/filme/:id" element={<MoviePage />} />
       </Routes>
-    </div>
+    </>
   );
 }
-
-export default App;
