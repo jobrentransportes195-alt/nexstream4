@@ -43,20 +43,20 @@ export default function App() {
       <Header user={user} profile={profile} />
 
       <Routes>
-        <Route path="/" element={<Home category="Home" />} />
-        <Route path="/filmes" element={<Home category="Filmes" />} />
-        <Route path="/series" element={<Home category="Séries" />} />
-        <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
+  <Route path="/" element={<Home category="Home" />} />
+  <Route path="/filmes" element={<Home category="Filmes" />} />
+  <Route path="/series" element={<Home category="Séries" />} />
+  <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
 
-        <Route
-          path="/admin"
-          element={
-            profile?.role === "admin"
-              ? <AdminPanel />
-              : <Home category="Home" />
-          }
-        />
-      </Routes>
+  <Route
+    path="/admin"
+    element={
+      profile?.role === "admin"
+        ? <AdminPanel />
+        : <Home category="Home" />
+    }
+  />
+</Routes>
     </>
   );
 }
