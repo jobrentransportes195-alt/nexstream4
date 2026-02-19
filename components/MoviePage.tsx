@@ -1,36 +1,41 @@
 import { useParams } from "react-router-dom";
+import { content } from "../data/content";
 import { useState } from "react";
 
 export default function MoviePage() {
   const { id } = useParams();
+  const movie = content.find(item => item.id === id);
 
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(movie?.rating || 0);
+
+  if (!movie) {
+    return <div className="page-container">Filme não encontrado</div>;
+  }
 
   return (
-    <div className="bg-black min-h-screen text-white p-6">
-      <h1 className="text-3xl font-bold mb-4">
-        Página do Filme ID: {id}
-      </h1>
+    <div className="page-container">
+      <img src={movie.image} className="movie-banner" />
 
-      <div className="flex gap-2 mb-6">
-        {[1,2,3,4,5].map((star) => (
+      <h1>{movie.title}</h1>
+      <p>{movie.description}</p>
+
+      <div className="stars">
+        {[1,2,3,4,5].map(star => (
           <span
             key={star}
             onClick={() => setRating(star)}
-            className={`cursor-pointer text-2xl ${
-              star <= rating ? "text-yellow-400" : "text-gray-500"
-            }`}
+            className={star <= rating ? "active-star" : ""}
           >
             ⭐
           </span>
         ))}
       </div>
 
-      <button
-        className="bg-red-600 px-6 py-3 rounded-lg hover:bg-red-700"
-      >
-        ▶ Assistir
-      </button>
+      <video
+        controls
+        className="video-player"
+        src={movie.video}
+      />
     </div>
   );
 }
