@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { Routes, Route, NavLink } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import { useState } from "react";
 
 export default function App() {
-  const [user, setUser] = useState<any>(null);
-  const [selectedCategory, setSelectedCategory] = useState("Home");
+  const [user, setUser] = useState<any>(true); // deixe true para não ir para login agora
 
   if (!user) {
     return <Login onLogin={setUser} />;
@@ -13,23 +13,20 @@ export default function App() {
   return (
     <>
       <div className="navbar">
-        <h2 style={{ color: "#e50914" }}>NexStream</h2>
+        <h2 className="logo">NexStream</h2>
 
-        <button onClick={() => setSelectedCategory("Home")}>Home</button>
-        <button onClick={() => setSelectedCategory("TV Ao Vivo")}>
-          TV Ao Vivo
-        </button>
-        <button onClick={() => setSelectedCategory("Filmes")}>
-          Filmes
-        </button>
-        <button onClick={() => setSelectedCategory("Séries")}>
-          Séries
-        </button>
-
-        <button onClick={() => setUser(null)}>Sair</button>
+        <NavLink to="/" end>Home</NavLink>
+        <NavLink to="/tv">TV Ao Vivo</NavLink>
+        <NavLink to="/filmes">Filmes</NavLink>
+        <NavLink to="/series">Séries</NavLink>
       </div>
 
-      <Home category={selectedCategory} />
+      <Routes>
+        <Route path="/" element={<Home category="Home" />} />
+        <Route path="/tv" element={<Home category="TV Ao Vivo" />} />
+        <Route path="/filmes" element={<Home category="Filmes" />} />
+        <Route path="/series" element={<Home category="Séries" />} />
+      </Routes>
     </>
   );
 }
