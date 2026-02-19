@@ -1,23 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { content } from "../data/content";
-import Player from "./Player";
 import SearchBar from "./SearchBar";
 
-export default function Home({ category }: any) {
+export default function Home() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState<any>(null);
 
-  let filteredContent = content;
-
-  if (category && category !== "Home") {
-    filteredContent = content.filter(
-      item => item.category === category
-    );
-  }
-
-  filteredContent = filteredContent.filter(item =>
+  const filteredContent = content.filter(item =>
     item.title.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -25,7 +15,7 @@ export default function Home({ category }: any) {
     <div className="home-container">
       <SearchBar onSearch={setSearch} />
 
-      <div className="row">
+      <div className="grid-container">
         {filteredContent.map(item => (
           <div
             key={item.id}
@@ -40,8 +30,6 @@ export default function Home({ category }: any) {
           </div>
         ))}
       </div>
-
-      {selected && <Player url={selected.video} />}
     </div>
   );
 }
