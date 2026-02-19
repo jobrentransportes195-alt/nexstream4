@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <>
-      <Header 
+      <Header user={user} profile={profile} />
 
       <Routes>
         <Route path="/" element={<Home category="Home" />} />
@@ -49,13 +49,13 @@ export default function App() {
         <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
 
         <Route
-  path="/admin"
-  element={
-    profile?.role === "admin"
-      ? <AdminPanel />
-      : <Home category="Home" />
-  }
-/>
+          path="/admin"
+          element={
+            profile?.role === "admin"
+              ? <AdminPanel />
+              : <Home category="Home" />
+          }
+        />
       </Routes>
     </>
   );
