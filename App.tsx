@@ -27,7 +27,8 @@ export default function App() {
         <Route path="/tv" element={<Home category="TV Ao Vivo" />} />
         <Route path="/filmes" element={<Home category="Filmes" />} />
         <Route path="/series" element={<Home category="Séries" />} />
-      </Routes>
+    <Route path="/filme/:id" element={<MoviePage />} /> 
+     </Routes>
     </>
   );
 }
