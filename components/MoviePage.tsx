@@ -1,46 +1,36 @@
 import { useParams } from "react-router-dom";
-import { content } from "../data/content";
-import Player from "./Player";
 import { useState } from "react";
 
 export default function MoviePage() {
   const { id } = useParams();
-  const movie = content.find(item => item.id === id);
-  const [play, setPlay] = useState(false);
 
-  if (!movie) return <div>Filme não encontrado</div>;
+  const [rating, setRating] = useState(0);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <img
-        src={movie.image}
-        style={{
-          width: "100%",
-          maxHeight: "400px",
-          objectFit: "cover",
-          borderRadius: "10px"
-        }}
-      />
+    <div className="bg-black min-h-screen text-white p-6">
+      <h1 className="text-3xl font-bold mb-4">
+        Página do Filme ID: {id}
+      </h1>
 
-      <h1>{movie.title}</h1>
-      <p>{movie.description}</p>
-      <p>⭐ {movie.rating}</p>
+      <div className="flex gap-2 mb-6">
+        {[1,2,3,4,5].map((star) => (
+          <span
+            key={star}
+            onClick={() => setRating(star)}
+            className={`cursor-pointer text-2xl ${
+              star <= rating ? "text-yellow-400" : "text-gray-500"
+            }`}
+          >
+            ⭐
+          </span>
+        ))}
+      </div>
 
       <button
-        onClick={() => setPlay(true)}
-        style={{
-          background: "#e50914",
-          padding: "10px 20px",
-          border: "none",
-          color: "white",
-          cursor: "pointer",
-          borderRadius: "5px"
-        }}
+        className="bg-red-600 px-6 py-3 rounded-lg hover:bg-red-700"
       >
-        Assistir
+        ▶ Assistir
       </button>
-
-      {play && <Player url={movie.video} />}
     </div>
   );
 }
