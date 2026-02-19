@@ -92,3 +92,18 @@ input {
     width: 100%;
   }
 }
+.logo {
+  color: #e50914;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  margin-right: 15px;
+  font-size: 14px;
+}
+
+.navbar a.active {
+  color: #e50914;
+  font-weight: bold;
+}
