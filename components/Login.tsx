@@ -1,31 +1,23 @@
-import React, { useState } from 'react';
-import { supabase } from '../services/supabase';
-import { User } from '../types';
+import React, { useState } from "react";
+import { supabase } from "../services/supabase";
 
 interface LoginProps {
-  onLogin: (user: User, isAdmin: boolean) => void;
+  onLogin: (user: any, isAdmin: boolean) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-
-  try {
-    console.log("EMAIL:", email);
-    console.log("PASSWORD:", password);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password: password.trim(),
     });
-
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
 
     if (error) {
       alert(error.message);
@@ -37,51 +29,55 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       onLogin(
         {
           id: data.user.id,
-          username: data.user.email || '',
+          email: data.user.email,
         },
         false
       );
     }
 
-  } catch (err) {
-    console.error(err);
-    alert("Erro ao fazer login");
-  } finally {
     setLoading(false);
-  }
-};
+  };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: 30 }}>
       <h2>Login</h2>
 
       <form onSubmit={handleSubmit}>
-        <div>
+        <div style={{ marginBottom: 10 }}>
           <input
             type="email"
             placeholder="Digite seu email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            style={{ padding: 8, width: "100%" }}
           />
         </div>
 
-        <br />
-
-        <div>
+        <div style={{ marginBottom: 10 }}>
           <input
             type="password"
             placeholder="Digite sua senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            style={{ padding: 8, width: "100%" }}
           />
         </div>
 
-        <br />
-
-        <button type="submit" disabled={loading}>
-          {loading ? 'Entrando...' : 'Entrar'}
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            padding: 10,
+            width: "100%",
+            background: "#1e40af",
+            color: "#fff",
+            border: "none",
+            borderRadius: 4,
+          }}
+        >
+          {loading ? "Entrando..." : "Entrar"}
         </button>
       </form>
     </div>
