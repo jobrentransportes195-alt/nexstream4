@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <>
-      <Header user={user} profile={profile} />
+      <Header 
 
       <Routes>
         <Route path="/" element={<Home category="Home" />} />
