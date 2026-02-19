@@ -15,52 +15,41 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   e.preventDefault();
   setLoading(true);
 
-  console.log("EMAIL:", email);
-  console.log("PASSWORD:", password);
+  try {
+    console.log("EMAIL:", email);
+    console.log("PASSWORD:", password);
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email.trim(),
-    password: password.trim(),
-  });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password: password.trim(),
+    });
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
 
-  if (error) {
-    alert(error.message);
-    setLoading(false);
-    return;
-  }
-
-  if (data.user) {
-    alert("Login OK");
-  }
-
-  setLoading(false);
-};
-
-      if (error) {
-        alert(error.message);
-        setLoading(false);
-        return;
-      }
-
-      if (data.user) {
-        onLogin(
-          {
-            id: data.user.id,
-            username: data.user.email || '',
-          },
-          false
-        );
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Erro ao fazer login');
-    } finally {
+    if (error) {
+      alert(error.message);
       setLoading(false);
+      return;
     }
-  };
+
+    if (data.user) {
+      onLogin(
+        {
+          id: data.user.id,
+          username: data.user.email || '',
+        },
+        false
+      );
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao fazer login");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div style={{ padding: 40 }}>
