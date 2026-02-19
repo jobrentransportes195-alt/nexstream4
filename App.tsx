@@ -1,25 +1,56 @@
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
+import { supabase } from "./services/supabase";
 import Home from "./components/Home";
 import MoviePage from "./components/MoviePage";
-import Favorites from "./components/Favorites";
-import Profile from "./components/Profile";
-import AdminPanel from "./components/AdminPanel";
+import AdminPage from "./components/AdminPage";
+import Header from "./components/Header";
 
 export default function App() {
+  const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (user) fetchProfile();
+  }, [user]);
+
+  async function fetchProfile() {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    setProfile(data);
+  }
+
   return (
     <>
-      <Header onLogout={() => alert("Logout")} />
+      <Header user={user} profile={profile} />
 
       <Routes>
         <Route path="/" element={<Home category="Home" />} />
         <Route path="/filmes" element={<Home category="Filmes" />} />
         <Route path="/series" element={<Home category="Séries" />} />
-        <Route path="/tv" element={<Home category="TV" />} />
-        <Route path="/filme/:id" element={<MoviePage />} />
-        <Route path="/favoritos" element={<Favorites />} />
-        <Route path="/perfil" element={<Profile />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
+
+        {profile?.role === "admin" && (
+          <Route path="/admin" element={<AdminPage />} />
+        )}
       </Routes>
     </>
   );
