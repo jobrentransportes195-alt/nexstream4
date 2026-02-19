@@ -80,4 +80,5 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white">
+      <div className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white);
+};
