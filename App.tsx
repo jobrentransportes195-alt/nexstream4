@@ -48,9 +48,14 @@ export default function App() {
         <Route path="/series" element={<Home category="Séries" />} />
         <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
 
-        {profile?.role === "admin" && (
-  <Route path="/admin" element={<AdminPanel />} />
-)}
+        <Route
+  path="/admin"
+  element={
+    profile?.role === "admin"
+      ? <AdminPanel />
+      : <Home category="Home" />
+  }
+/>
       </Routes>
     </>
   );
