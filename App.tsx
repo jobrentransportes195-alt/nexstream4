@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { supabase } from "./services/supabase";
 import Home from "./components/Home";
 import MoviePage from "./components/MoviePage";
-import AdminPage from "./components/AdminPage";
+import AdminPanel from "./components/AdminPanel";
 import Header from "./components/Header";
 
 export default function App() {
