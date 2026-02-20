@@ -13,7 +13,29 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [playlistUrl, setPlaylistUrl] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
+useEffect(() => {
+  if (!selectedChannel || !videoRef.current) return;
 
+  const video = videoRef.current;
+
+  if (Hls.isSupported()) {
+    const hls = new Hls();
+    hls.loadSource(selectedChannel.url);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play();
+    });
+
+    return () => {
+      hls.destroy();
+    };
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = selectedChannel.url;
+    video.play();
+  }
+
+}, [selectedChannel]);
   // ==============================
   // PARSE M3U
   // ==============================
