@@ -47,7 +47,7 @@ function Home() {
             const logo = logoMatch ? logoMatch[1] : undefined;
 
             const url = lines[i + 1];
-
+            const [customPlaylist, setCustomPlaylist] = useState<string | null>(null);
             items.push({ name, url, group, logo });
           }
         }
