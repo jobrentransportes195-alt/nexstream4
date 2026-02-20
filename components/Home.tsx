@@ -55,7 +55,6 @@ function Home() {
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
       const video = videoRef.current;
-
       setLoading(true);
 
       if (Hls.isSupported()) {
@@ -95,6 +94,8 @@ function Home() {
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const groups = [...new Set(filtered.map(c => c.group))];
+
   return (
     <div className="container">
 
@@ -117,31 +118,38 @@ function Home() {
         onChange={e => setSearch(e.target.value)}
       />
 
-      <div className="grid">
-        {filtered.map((ch, i) => (
-          <div key={i} className="card">
+      {groups.map(group => (
+        <div key={group}>
+          <h2 className="category-title">{group}</h2>
 
-            {ch.logo && (
-              <img
-                src={ch.logo}
-                alt={ch.name}
-                className="channel-logo"
-                onClick={() => setSelectedChannel(ch)}
-              />
-            )}
+          <div className="horizontal-scroll">
+            {filtered
+              .filter(c => c.group === group)
+              .map((ch, i) => (
+                <div key={i} className="channel-card">
+                  
+                  {ch.logo && (
+                    <img
+                      src={ch.logo}
+                      alt={ch.name}
+                      onClick={() => setSelectedChannel(ch)}
+                    />
+                  )}
 
-            <div className="channel-name">{ch.name}</div>
+                  <p>{ch.name}</p>
 
-            <button
-              className="fav-btn"
-              onClick={() => toggleFavorite(ch.url)}
-            >
-              {favorites.includes(ch.url) ? "❤️" : "🤍"}
-            </button>
+                  <button
+                    className="fav-btn"
+                    onClick={() => toggleFavorite(ch.url)}
+                  >
+                    {favorites.includes(ch.url) ? "❤️" : "🤍"}
+                  </button>
 
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
 
       {selectedChannel && (
         <div className="modal fade-in">
