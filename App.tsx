@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "./services/supabase";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -25,7 +26,7 @@ export default function App() {
 
     initAuth();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
+    const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         const sessionUser = session?.user ?? null;
         setUser(sessionUser);
@@ -39,7 +40,7 @@ export default function App() {
     );
 
     return () => {
-      authListener.subscription.unsubscribe();
+      listener.subscription.unsubscribe();
     };
   }, []);
 
@@ -55,16 +56,14 @@ export default function App() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          background: "#0a0a0a",
-          color: "white"
-        }}
-      >
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#0a0a0a",
+        color: "white"
+      }}>
         Carregando...
       </div>
     );
@@ -74,11 +73,18 @@ export default function App() {
     return <Login />;
   }
 
-  // 👑 Se for admin → abre painel
-  if (profile?.role === "admin") {
-    return <AdminPanel />;
-  }
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
 
-  // 🎬 Usuário normal → Home
-  return <Home />;
+      <Route
+        path="/admin"
+        element={
+          profile?.role === "admin"
+            ? <AdminPanel />
+            : <Navigate to="/" />
+        }
+      />
+    </Routes>
+  );
 }
