@@ -115,7 +115,7 @@ function Home() {
 
 </div>
 )}
-
+/>
       <input
         placeholder="Buscar canal..."
         className="search"
