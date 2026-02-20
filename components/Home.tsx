@@ -5,6 +5,7 @@ interface Channel {
   name: string;
   url: string;
   group: string;
+  logo?: string;
 }
 
 function Home() {
@@ -23,11 +24,16 @@ function Home() {
           if (lines[i].startsWith("#EXTINF")) {
             const info = lines[i];
             const name = info.split(",")[1];
+
             const groupMatch = info.match(/group-title="(.*?)"/);
             const group = groupMatch ? groupMatch[1] : "Outros";
+
+            const logoMatch = info.match(/tvg-logo="(.*?)"/);
+            const logo = logoMatch ? logoMatch[1] : undefined;
+
             const url = lines[i + 1];
 
-            items.push({ name, url, group });
+            items.push({ name, url, group, logo });
           }
         }
 
@@ -57,6 +63,13 @@ function Home() {
               navigate(`/player/${encodeURIComponent(ch.url)}`)
             }
           >
+            {ch.logo && (
+              <img
+                src={ch.logo}
+                alt={ch.name}
+                className="channel-logo"
+              />
+            )}
             <div className="channel-name">{ch.name}</div>
           </div>
         ))}
