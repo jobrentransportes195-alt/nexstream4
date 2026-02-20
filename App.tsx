@@ -1,7 +1,14 @@
+import { Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import Player from "./components/Player";
+
 function App() {
   return (
-    <div style={{ background: "red", height: "100vh" }}>
-      TESTE TEMA
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/player/:url" element={<Player />} />
+    </Routes>
   );
 }
+
+export default App;
