@@ -1,82 +1,44 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../services/supabase";
 import { useNavigate } from "react-router-dom";
 
-export default function Home({ category }: any) {
+function Home() {
+  const [channels, setChannels] = useState<any[]>([]);
   const navigate = useNavigate();
-  const [movies, setMovies] = useState<any[]>([]);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchMovies();
-  }, [category]);
+    fetch("/lista.m3u")
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.split("\n");
+        const items: any[] = [];
 
-  async function fetchMovies() {
-    setLoading(true);
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith("#EXTINF")) {
+            const name = lines[i].split(",")[1];
+            const url = lines[i + 1];
+            items.push({ name, url });
+          }
+        }
 
-    let query = supabase.from("movies").select("*");
-
-    if (category !== "Home") {
-      query = query.eq("category", category);
-    }
-
-    const { data } = await query;
-    setMovies(data || []);
-    setLoading(false);
-  }
-
-  const filtered = movies.filter((m) =>
-    m.title?.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const hero = filtered[0];
+        setChannels(items);
+      });
+  }, []);
 
   return (
-    <div className="home-container">
-
-      {/* HERO */}
-      {hero && (
+    <div className="grid">
+      {channels.map((ch, i) => (
         <div
-          className="hero"
-          style={{ backgroundImage: `url(${hero.image})` }}
+          key={i}
+          className="card"
+          onClick={() =>
+            navigate(`/player/${encodeURIComponent(ch.url)}`)
+          }
         >
-          <div className="hero-overlay">
-            <h1>{hero.title}</h1>
-            <p>{hero.description}</p>
-            <button onClick={() => navigate(`/filme/${hero.id}`)}>
-              ▶ Assistir
-            </button>
-          </div>
+          {ch.name}
         </div>
-      )}
-
-      <input
-        placeholder="Buscar..."
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {loading && <p>Carregando...</p>}
-
-      {!loading && filtered.length === 0 && (
-        <p style={{ marginTop: 40 }}>Nenhum filme encontrado</p>
-      )}
-
-      <div className="grid-container">
-        {filtered.map((movie) => (
-          <div
-            key={movie.id}
-            className="card"
-            onClick={() => navigate(`/filme/${movie.id}`)}
-          >
-            <img src={movie.image} />
-            <div className="card-info">
-              <h4>{movie.title}</h4>
-              <p>⭐ {movie.rating}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }
+
+export default Home;
