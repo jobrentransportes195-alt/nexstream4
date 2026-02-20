@@ -19,7 +19,6 @@ function Home() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // 🔹 Carregar favoritos + último canal + lista
   useEffect(() => {
     const savedFav = localStorage.getItem("favorites");
     if (savedFav) setFavorites(JSON.parse(savedFav));
@@ -54,7 +53,6 @@ function Home() {
       });
   }, []);
 
-  // 🔹 Player HLS
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
       const video = videoRef.current;
@@ -98,7 +96,7 @@ function Home() {
   return (
     <div className="container">
 
-      {/* ===== BANNER ===== */}
+      {/* BANNER */}
       <div className="banner">
         <div className="banner-content">
           <h1>NexStream</h1>
@@ -115,7 +113,7 @@ function Home() {
         </div>
       </div>
 
-      {/* ===== BUSCA ===== */}
+      {/* BUSCA */}
       <input
         placeholder="Buscar canal..."
         className="search"
@@ -123,7 +121,7 @@ function Home() {
         onChange={e => setSearch(e.target.value)}
       />
 
-      {/* ===== FAVORITOS ===== */}
+      {/* FAVORITOS */}
       {favorites.length > 0 && (
         <>
           <h2 className="category-title">❤️ Meus Favoritos</h2>
@@ -131,82 +129,41 @@ function Home() {
             {channels
               .filter(c => favorites.includes(c.url))
               .map((ch, i) => (
-                <div
+                <ChannelCard
                   key={i}
-                  className={`channel-card ${
-                    selectedChannel?.url === ch.url ? "active-channel" : ""
-                  }`}
-                >
-                  <div
-                    className="card-image"
-                    onClick={() => setSelectedChannel(ch)}
-                  >
-                    <div className="live-badge">AO VIVO</div>
-
-                    {ch.logo && (
-                      <img src={ch.logo} alt={ch.name} />
-                    )}
-
-                    <div className="overlay-play">▶</div>
-                  </div>
-
-                  <p>{ch.name}</p>
-
-                  <button
-                    className="fav-btn"
-                    onClick={() => toggleFavorite(ch.url)}
-                  >
-                    ❤️
-                  </button>
-                </div>
+                  ch={ch}
+                  selectedChannel={selectedChannel}
+                  setSelectedChannel={setSelectedChannel}
+                  toggleFavorite={toggleFavorite}
+                  isFavorite={true}
+                />
               ))}
           </div>
         </>
       )}
 
-      {/* ===== CATEGORIAS ===== */}
+      {/* CATEGORIAS */}
       {groups.map(group => (
         <div key={group}>
           <h2 className="category-title">{group}</h2>
-
           <div className="horizontal-scroll">
             {filtered
               .filter(c => c.group === group)
               .map((ch, i) => (
-                <div
+                <ChannelCard
                   key={i}
-                  className={`channel-card ${
-                    selectedChannel?.url === ch.url ? "active-channel" : ""
-                  }`}
-                >
-                  <div
-                    className="card-image"
-                    onClick={() => setSelectedChannel(ch)}
-                  >
-                    <div className="live-badge">AO VIVO</div>
-
-                    {ch.logo && (
-                      <img src={ch.logo} alt={ch.name} />
-                    )}
-
-                    <div className="overlay-play">▶</div>
-                  </div>
-
-                  <p>{ch.name}</p>
-
-                  <button
-                    className="fav-btn"
-                    onClick={() => toggleFavorite(ch.url)}
-                  >
-                    {favorites.includes(ch.url) ? "❤️" : "🤍"}
-                  </button>
-                </div>
+                  ch={ch}
+                  selectedChannel={selectedChannel}
+                  setSelectedChannel={setSelectedChannel}
+                  toggleFavorite={toggleFavorite}
+                  isFavorite={favorites.includes(ch.url)}
+                />
               ))}
           </div>
         </div>
       ))}
 
-      {/* ===== MODAL PLAYER ===== */}
+      {/* MODAL */}
       {selectedChannel && (
         <div className="modal fade-in">
           <div className="modal-content">
@@ -222,16 +179,12 @@ function Home() {
 
             {loading && <div className="loader"></div>}
 
-            <video
-              ref={videoRef}
-              controls
-              style={{ width: "100%", borderRadius: "15px" }}
-            />
+            <video ref={videoRef} controls style={{ width: "100%" }} />
           </div>
         </div>
       )}
 
-      {/* ===== MINI PLAYER ===== */}
+      {/* MINI PLAYER */}
       {miniPlayer && lastChannel && (
         <div
           className="mini-player"
@@ -240,14 +193,41 @@ function Home() {
             setMiniPlayer(false);
           }}
         >
-          <video
-            src={lastChannel.url}
-            autoPlay
-            muted
-          />
+          <video src={lastChannel.url} autoPlay muted />
         </div>
       )}
 
+    </div>
+  );
+}
+
+function ChannelCard({
+  ch,
+  selectedChannel,
+  setSelectedChannel,
+  toggleFavorite,
+  isFavorite
+}: any) {
+  return (
+    <div
+      className={`channel-card ${
+        selectedChannel?.url === ch.url ? "active-channel" : ""
+      }`}
+    >
+      <div className="card-image" onClick={() => setSelectedChannel(ch)}>
+        <div className="live-badge">AO VIVO</div>
+        {ch.logo && <img src={ch.logo} alt={ch.name} />}
+        <div className="overlay-play">▶</div>
+      </div>
+
+      <p>{ch.name}</p>
+
+      <button
+        className="fav-btn"
+        onClick={() => toggleFavorite(ch.url)}
+      >
+        {isFavorite ? "❤️" : "🤍"}
+      </button>
     </div>
   );
 }
