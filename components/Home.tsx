@@ -118,6 +118,40 @@ function Home() {
         onChange={e => setSearch(e.target.value)}
       />
 
+      {/* 🔥 FAVORITOS NO TOPO */}
+      {favorites.length > 0 && (
+        <>
+          <h2 className="category-title">❤️ Meus Favoritos</h2>
+          <div className="horizontal-scroll">
+            {channels
+              .filter(c => favorites.includes(c.url))
+              .map((ch, i) => (
+                <div key={i} className="channel-card">
+
+                  {ch.logo && (
+                    <img
+                      src={ch.logo}
+                      alt={ch.name}
+                      onClick={() => setSelectedChannel(ch)}
+                    />
+                  )}
+
+                  <p>{ch.name}</p>
+
+                  <button
+                    className="fav-btn"
+                    onClick={() => toggleFavorite(ch.url)}
+                  >
+                    ❤️
+                  </button>
+
+                </div>
+              ))}
+          </div>
+        </>
+      )}
+
+      {/* 📂 CATEGORIAS */}
       {groups.map(group => (
         <div key={group}>
           <h2 className="category-title">{group}</h2>
