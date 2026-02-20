@@ -1,64 +1,85 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0b1e33;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #071a2c, #0d2b45);
   color: white;
 }
 
-/* Container principal */
+/* Container */
 .smart-container {
-  padding: 20px;
+  padding: 30px 20px;
+  text-align: center;
 }
 
 /* Título */
 .smart-title {
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 30px;
+  font-size: 32px;
+  margin-bottom: 40px;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
-/* Grid inicial */
+/* Grid */
 .smart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  margin: auto;
 }
 
-/* Cards grandes */
+/* Card base */
 .smart-card {
-  background: linear-gradient(135deg, #8e2de2, #4a00e0);
-  padding: 40px 10px;
-  text-align: center;
-  font-size: 18px;
+  padding: 50px 15px;
+  border-radius: 18px;
+  font-size: 16px;
   font-weight: bold;
-  border-radius: 15px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Cores diferentes */
+.smart-card:nth-child(1) {
+  background: linear-gradient(135deg, #ff00cc, #3333ff);
+}
+
+.smart-card:nth-child(2) {
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+}
+
+.smart-card:nth-child(3) {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+.smart-card:nth-child(4) {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
 }
 
 .smart-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-8px) scale(1.05);
 }
 
 /* Categoria */
 .category-title {
   margin: 20px 0;
+  font-size: 22px;
 }
 
 /* Grid canais */
 .channel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 15px;
+  padding: 10px;
 }
 
-/* Card canal */
 .channel-card {
   background: #142b45;
-  padding: 15px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   cursor: pointer;
-  text-align: center;
+  transition: 0.3s;
 }
 
 .channel-card:hover {
@@ -73,6 +94,7 @@ body {
   right: 0;
   background: black;
   padding: 10px;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.7);
 }
 
 video {
@@ -80,11 +102,10 @@ video {
   border-radius: 10px;
 }
 
-/* Botão voltar */
 .back-btn {
   background: #ff0040;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 15px;
   color: white;
   border-radius: 8px;
   cursor: pointer;
