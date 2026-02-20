@@ -1,22 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { supabase } from "./services/supabase";
 
 import Header from "./components/Header";
 import Home from "./components/Home";
-import MoviePage from "./components/MoviePage";
-import AdminPanel from "./components/AdminPanel";
 import Login from "./components/Login";
+import Player from "./components/Player";
+import AdminPanel from "./components/AdminPanel";
 
 function App() {
   const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
-    const session = supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        setUser(data.session.user);
-      }
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -27,25 +24,20 @@ function App() {
   async function handleLogout() {
     await supabase.auth.signOut();
     setUser(null);
-    setProfile(null);
   }
 
-  if (!user) {
-    return <Login onLogin={setUser} />;
-  }
+  if (!user) return <Login onLogin={setUser} />;
 
   return (
-    <BrowserRouter>
-      <Header onLogout={handleLogout} profile={profile} />
+    <>
+      <Header onLogout={handleLogout} />
 
       <Routes>
-        <Route path="/" element={<Home category="Home" />} />
-        <Route path="/filmes" element={<Home category="Filmes" />} />
-        <Route path="/series" element={<Home category="Séries" />} />
-        <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/player/:url" element={<Player />} />
         <Route path="/admin" element={<AdminPanel />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
