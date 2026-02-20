@@ -1,11 +1,22 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import "./index.css";
+// Dentro do seu return:
+<div className="grid">
+  {/* Esse card vai ocupar a lateral esquerda toda */}
+  <div className="card card-live">
+    <div style={{fontSize: '3rem'}}>📺</div>
+    TV AO VIVO
+  </div>
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-); 
+  <div className="card card-movies">
+    <div style={{fontSize: '2rem'}}>🎬</div>
+    FILMES
+  </div>
+
+  <div className="card card-series">
+    <div style={{fontSize: '2rem'}}>🎞️</div>
+    SÉRIES
+  </div>
+
+  {/* Cards da linha de baixo */}
+  <div className="card card-small">TELA GRAVADOR</div>
+  <div className="card card-small">MÚLTIPLO TELA</div>
+</div>
