@@ -1,90 +1,27 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "./services/supabase";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import AdminPanel from "./components/AdminPanel";
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      const sessionUser = data.session?.user ?? null;
-
-      setUser(sessionUser);
-
-      if (sessionUser) {
-        await fetchProfile(sessionUser.id);
+    const getSession = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        setUser(data.session?.user ?? null);
+      } catch (err) {
+        console.log("Erro sessão:", err);
       }
-
       setLoading(false);
     };
 
-    initAuth();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        const sessionUser = session?.user ?? null;
-        setUser(sessionUser);
-
-        if (sessionUser) {
-          await fetchProfile(sessionUser.id);
-        } else {
-          setProfile(null);
-        }
-      }
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    getSession();
   }, []);
 
-  async function fetchProfile(userId: string) {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .maybeSingle();
+  if (loading) return null;
 
-    setProfile(data);
-  }
-
-  if (loading) {
-    return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0a0a0a",
-        color: "white"
-      }}>
-        Carregando...
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Login />;
-  }
-
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-
-      <Route
-        path="/admin"
-        element={
-          profile?.role === "admin"
-            ? <AdminPanel />
-            : <Navigate to="/" />
-        }
-      />
-    </Routes>
-  );
+  return user ? <Home /> : <Login />;
 }
