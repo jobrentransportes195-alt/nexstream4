@@ -8,164 +8,155 @@ interface Channel {
   logo?: string;
 }
 
-function Home() {
+export default function Home() {
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+  const [search, setSearch] = useState("");
+  const [playlistUrl, setPlaylistUrl] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  /* ========= IMPORTAR PLAYLIST ========= */
-  function handlePlaylistUpload(file: File) {
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      const text = e.target?.result as string;
-      localStorage.setItem("customPlaylist", text);
-      loadPlaylist(text);
-    };
-
-    reader.readAsText(file);
-  }
-
-  function loadPlaylist(text: string) {
-    const lines = text.split("\n");
+  // ==============================
+  // PARSE M3U
+  // ==============================
+  function parseM3U(text: string) {
+    const lines = text.split("\n").map(l => l.trim());
     const items: Channel[] = [];
-    const [playlistUrl, setPlaylistUrl] = useState("");
 
-async function loadFromUrl() {
-  if (!playlistUrl) {
-    alert("Cole o link da playlist.");
-    return;
-  }
-
-  try {
-    const response = await fetch(playlistUrl);
-    const text = await response.text();
-
-    localStorage.setItem("customPlaylist", text);
-    loadPlaylist(text);
-    alert("Playlist carregada com sucesso!");
-  } catch (err) {
-    alert("Erro ao carregar playlist.");
-  }
-}
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].startsWith("#EXTINF")) {
         const info = lines[i];
         const name = info.split(",")[1] || "Canal";
-
-        const groupMatch = info.match(/group-title="(.*?)"/);
-        const group = groupMatch ? groupMatch[1] : "Outros";
-
-        const logoMatch = info.match(/tvg-logo="(.*?)"/);
-        const logo = logoMatch ? logoMatch[1] : undefined;
-
         const url = lines[i + 1];
 
-        items.push({ name, url, group, logo });
+        if (url && !url.startsWith("#")) {
+          items.push({
+            name,
+            url,
+            group: "CANAIS"
+          });
+        }
       }
     }
 
     setChannels(items);
   }
 
-  /* ========= LOAD INICIAL ========= */
-  useEffect(() => {
-    const saved = localStorage.getItem("customPlaylist");
+  // ==============================
+  // UPLOAD POR ARQUIVO
+  // ==============================
+  function handleFileUpload(file: File) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target?.result as string;
+      parseM3U(text);
+    };
+    reader.readAsText(file);
+  }
 
-    if (saved) {
-      loadPlaylist(saved);
-    } else {
-      fetch("/lista.m3u")
-        .then(res => res.text())
-        .then(text => loadPlaylist(text));
+  // ==============================
+  // IMPORTAR POR LINK
+  // ==============================
+  async function handleImportByLink() {
+    if (!playlistUrl) return;
+
+    try {
+      const res = await fetch(playlistUrl);
+      const text = await res.text();
+      parseM3U(text);
+    } catch {
+      alert("Erro ao importar lista");
     }
-  }, []);
+  }
 
-  /* ========= PLAYER ========= */
-  useEffect(() => {
-    if (selectedChannel && videoRef.current) {
-      const video = videoRef.current;
-
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(selectedChannel.url);
-        hls.attachMedia(video);
-      } else {
-        video.src = selectedChannel.url;
-      }
-    }
-  }, [selectedChannel]);
-
-  const categories = [...new Set(channels.map(c => c.group))];
+  const filtered = channels.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="premium-container">
+    <div className="container">
 
-      <header className="premium-header">
-        <h1>NexStream</h1>
+      <h1 className="title">NexStream</h1>
 
-        {/* BOTÃO IMPORTAR */}
-        <label className="import-btn">
-          📂 Importar Playlist
+      {/* IMPORTAR POR LINK */}
+      <div style={{ marginBottom: 20 }}>
+        <input
+          type="text"
+          placeholder="Cole o link da playlist M3U"
+          value={playlistUrl}
+          onChange={(e) => setPlaylistUrl(e.target.value)}
+          style={{ padding: 10, width: "70%" }}
+        />
+        <button onClick={handleImportByLink} style={{ padding: 10 }}>
+          Importar Link
+        </button>
+      </div>
+
+      {/* IMPORTAR POR ARQUIVO */}
+      <div style={{ marginBottom: 20 }}>
+        <label style={{
+          background: "linear-gradient(90deg,#ff00cc,#3333ff)",
+          padding: 10,
+          borderRadius: 8,
+          cursor: "pointer",
+          color: "white"
+        }}>
+          📂 Importar Arquivo M3U
           <input
             type="file"
             accept=".m3u"
             hidden
             onChange={(e) => {
               if (e.target.files?.[0]) {
-                handlePlaylistUpload(e.target.files[0]);
+                handleFileUpload(e.target.files[0]);
               }
             }}
           />
         </label>
-      </header>
+      </div>
 
-      {!selectedCategory ? (
-        <div className="premium-grid">
-          {categories.map(cat => (
-            <div
-              key={cat}
-              className="premium-card"
-              onClick={() => setSelectedCategory(cat)}
-            >
-              <div className="card-overlay">
-                <h2>{cat}</h2>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <>
-          <button className="back-btn" onClick={() => setSelectedCategory(null)}>
-            ← Voltar
-          </button>
+      {/* BUSCA */}
+      <input
+        placeholder="Buscar canal..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        style={{ padding: 10, marginBottom: 20 }}
+      />
 
-          <div className="channel-grid">
-            {channels
-              .filter(c => c.group === selectedCategory)
-              .map((ch, i) => (
-                <div
-                  key={i}
-                  className="channel-card"
-                  onClick={() => setSelectedChannel(ch)}
-                >
-                  {ch.logo && <img src={ch.logo} alt={ch.name} />}
-                  <span>{ch.name}</span>
-                </div>
-              ))}
+      {/* LISTA */}
+      <div>
+        {filtered.map((ch, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#111",
+              padding: 10,
+              marginBottom: 10,
+              borderRadius: 8,
+              cursor: "pointer",
+              color: "white"
+            }}
+            onClick={() => {
+              if (videoRef.current) {
+                if (Hls.isSupported()) {
+                  const hls = new Hls();
+                  hls.loadSource(ch.url);
+                  hls.attachMedia(videoRef.current);
+                } else {
+                  videoRef.current.src = ch.url;
+                }
+              }
+            }}
+          >
+            {ch.name}
           </div>
-        </>
-      )}
+        ))}
+      </div>
 
-      {selectedChannel && (
-        <div className="player-fullscreen">
-          <button className="close-player" onClick={() => setSelectedChannel(null)}>✖</button>
-          <video ref={videoRef} controls autoPlay />
-        </div>
-      )}
+      {/* PLAYER */}
+      <video
+        ref={videoRef}
+        controls
+        style={{ width: "100%", marginTop: 20 }}
+      />
     </div>
   );
 }
-
-export default Home;
