@@ -57,7 +57,11 @@ body {
 
 /* CATEGORIES */
 .category-title {
-  margin: 25px 0 10px;
+  margin: 35px 0 15px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
 }
 
 .horizontal-scroll {
