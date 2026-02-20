@@ -10,15 +10,16 @@ interface Channel {
 
 function Home() {
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [miniPlayer, setMiniPlayer] = useState(false);
-const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [lastChannel, setLastChannel] = useState<Channel | null>(null);
   const [loading, setLoading] = useState(false);
+  const [miniPlayer, setMiniPlayer] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [miniPlayer, setMiniPlayer] = useState(false);
+
+  // 🔹 Carregar favoritos + último canal + lista
   useEffect(() => {
     const savedFav = localStorage.getItem("favorites");
     if (savedFav) setFavorites(JSON.parse(savedFav));
@@ -53,6 +54,7 @@ const [search, setSearch] = useState("");
       });
   }, []);
 
+  // 🔹 Player HLS
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
       const video = videoRef.current;
@@ -96,34 +98,24 @@ const [search, setSearch] = useState("");
   return (
     <div className="container">
 
-      {/* 🔥 BANNER */}
-      <div
-  className="banner"
-  style={{
-    backgroundImage: selectedChannel?.logo
-      ? `linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url(${selectedChannel.logo})`
-      : undefined
-  }}
->
-  <div className="banner-content">
-    <h1>{selectedChannel ? selectedChannel.name : "NexStream"}</h1>
-    <p>
-      {selectedChannel
-        ? "Transmissão ao vivo"
-        : "IPTV Premium Experience"}
-    </p>
+      {/* ===== BANNER ===== */}
+      <div className="banner">
+        <div className="banner-content">
+          <h1>NexStream</h1>
+          <p>IPTV Premium Experience</p>
 
-    {lastChannel && (
-      <button
-        className="play-banner-btn"
-       const [miniPlayer, setMiniPlayer] = useState(false);>
-        ▶ Continuar Assistindo
-      </button>
-    )}
-  </div>
-</div>
+          {lastChannel && (
+            <button
+              className="play-banner-btn"
+              onClick={() => setSelectedChannel(lastChannel)}
+            >
+              ▶ Continuar Assistindo
+            </button>
+          )}
+        </div>
+      </div>
 
-      {/* 🔎 BUSCA */}
+      {/* ===== BUSCA ===== */}
       <input
         placeholder="Buscar canal..."
         className="search"
@@ -131,7 +123,7 @@ const [search, setSearch] = useState("");
         onChange={e => setSearch(e.target.value)}
       />
 
-      {/* ❤️ FAVORITOS */}
+      {/* ===== FAVORITOS ===== */}
       {favorites.length > 0 && (
         <>
           <h2 className="category-title">❤️ Meus Favoritos</h2>
@@ -145,19 +137,19 @@ const [search, setSearch] = useState("");
                     selectedChannel?.url === ch.url ? "active-channel" : ""
                   }`}
                 >
-                   <div className="card-image" onClick={() => setSelectedChannel(ch)}>
-  {ch.url && (
-    <div className="live-badge">
-      AO VIVO
-    </div>
-  )}
+                  <div
+                    className="card-image"
+                    onClick={() => setSelectedChannel(ch)}
+                  >
+                    <div className="live-badge">AO VIVO</div>
 
-  {ch.logo && <img src={ch.logo} alt={ch.name} />}
+                    {ch.logo && (
+                      <img src={ch.logo} alt={ch.name} />
+                    )}
 
-  <div className="overlay-play">
-    ▶
-  </div>
-</div>
+                    <div className="overlay-play">▶</div>
+                  </div>
+
                   <p>{ch.name}</p>
 
                   <button
@@ -172,7 +164,7 @@ const [search, setSearch] = useState("");
         </>
       )}
 
-      {/* 📂 CATEGORIAS */}
+      {/* ===== CATEGORIAS ===== */}
       {groups.map(group => (
         <div key={group}>
           <h2 className="category-title">{group}</h2>
@@ -193,7 +185,9 @@ const [search, setSearch] = useState("");
                   >
                     <div className="live-badge">AO VIVO</div>
 
-                    <img src={ch.logo} alt={ch.name} />
+                    {ch.logo && (
+                      <img src={ch.logo} alt={ch.name} />
+                    )}
 
                     <div className="overlay-play">▶</div>
                   </div>
@@ -212,19 +206,19 @@ const [search, setSearch] = useState("");
         </div>
       ))}
 
-      {/* 🎬 PLAYER */}
+      {/* ===== MODAL PLAYER ===== */}
       {selectedChannel && (
         <div className="modal fade-in">
           <div className="modal-content">
             <button
-  className="close-btn"
-  onClick={() => {
-    setMiniPlayer(true);
-    setSelectedChannel(null);
-  }}
->
-  ✖
-</button>
+              className="close-btn"
+              onClick={() => {
+                setSelectedChannel(null);
+                setMiniPlayer(true);
+              }}
+            >
+              ✖
+            </button>
 
             {loading && <div className="loader"></div>}
 
@@ -236,6 +230,24 @@ const [search, setSearch] = useState("");
           </div>
         </div>
       )}
+
+      {/* ===== MINI PLAYER ===== */}
+      {miniPlayer && lastChannel && (
+        <div
+          className="mini-player"
+          onClick={() => {
+            setSelectedChannel(lastChannel);
+            setMiniPlayer(false);
+          }}
+        >
+          <video
+            src={lastChannel.url}
+            autoPlay
+            muted
+          />
+        </div>
+      )}
+
     </div>
   );
 }
