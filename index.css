@@ -85,14 +85,19 @@ body {
 /* ===== SCROLL HORIZONTAL ===== */
 .horizontal-scroll {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding: 15px 5px;
   scroll-behavior: smooth;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
 }
 
 /* ===== CARDS ===== */
