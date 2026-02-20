@@ -9,12 +9,19 @@ import Header from "./components/Header";
 export default function App() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Escuta login
+  // ==============================
+  // 🔐 ESCUTA LOGIN
+  // ==============================
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
       setUser(data.session?.user ?? null);
-    });
+      setLoading(false);
+    };
+
+    getSession();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_, session) => {
@@ -27,9 +34,12 @@ export default function App() {
     };
   }, []);
 
-  // Busca perfil
+  // ==============================
+  // 👤 BUSCA PERFIL
+  // ==============================
   useEffect(() => {
     if (user) fetchProfile();
+    else setProfile(null);
   }, [user]);
 
   async function fetchProfile() {
@@ -46,12 +56,29 @@ export default function App() {
     }
   }
 
+  // ==============================
+  // 🚪 LOGOUT
+  // ==============================
   async function handleLogout() {
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
   }
 
+  // ==============================
+  // ⏳ LOADING INICIAL
+  // ==============================
+  if (loading) {
+    return (
+      <div style={{ color: "white", padding: 50 }}>
+        Carregando...
+      </div>
+    );
+  }
+
+  // ==============================
+  // 🎬 RENDER PRINCIPAL
+  // ==============================
   return (
     <>
       <Header onLogout={handleLogout} />
@@ -60,7 +87,10 @@ export default function App() {
         <Route path="/" element={<Home category="Home" />} />
         <Route path="/filmes" element={<Home category="Filmes" />} />
         <Route path="/series" element={<Home category="Séries" />} />
-        <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
+        <Route
+          path="/filme/:id"
+          element={<MoviePage profile={profile} />}
+        />
 
         <Route
           path="/admin"
