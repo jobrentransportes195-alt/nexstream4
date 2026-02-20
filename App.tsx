@@ -31,6 +31,8 @@ export default function App() {
   }, [user]);
 
   async function fetchProfile() {
+    if (!user) return;
+
     const { data } = await supabase
       .from("profiles")
       .select("*")
@@ -55,14 +57,7 @@ export default function App() {
         <Route path="/filmes" element={<Home category="Filmes" />} />
         <Route path="/series" element={<Home category="Séries" />} />
         <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
-        <Route
-  path="/admin"
-  element={<AdminPanel />}
-/>
-              <Home category="Home" />
-            )
-          }
-        />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </>
   );
