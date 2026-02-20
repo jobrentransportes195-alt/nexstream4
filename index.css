@@ -114,12 +114,16 @@ body {
 
 .live-badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  background: red;
-  padding: 4px 8px;
-  font-size: 10px;
-  border-radius: 5px;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(45deg, #ff0000, #ff4d4d);
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(255,0,0,0.5);
+  z-index: 5;
 }
 
 .fav-btn {
