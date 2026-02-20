@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  background: #000;
-  font-family: Arial, sans-serif;
+  background: #141414;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
   color: white;
 }
 
@@ -11,156 +11,83 @@ body {
   top: 0;
   width: 100%;
   height: 70px;
-  background: #111;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 40px;
   z-index: 1000;
 }
 
 .logo {
-  color: red;
-  font-size: 24px;
+  color: #e50914;
+  font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-}
-
-.nav {
-  display: flex;
-  gap: 15px;
 }
 
 .nav button {
   background: none;
   border: none;
   color: white;
+  margin-right: 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .nav button:hover {
-  color: red;
+  color: #e50914;
 }
 
-.profile {
+.profile-area button {
+  background: #e50914;
+  border: none;
+  padding: 6px 12px;
+  color: white;
   cursor: pointer;
-  font-size: 14px;
-  color: #ccc;
+  border-radius: 4px;
 }
 
 /* HOME */
 .home-container {
-  padding-top: 90px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-top: 120px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
 }
 
 .card {
-  background: #111;
-  border-radius: 12px;
+  background: #1c1c1c;
+  border-radius: 8px;
   overflow: hidden;
-  cursor: pointer;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  z-index: 10;
 }
 
 .card img {
   width: 100%;
-  height: 200px;
+  height: 260px;
   object-fit: cover;
 }
 
 .card-info {
   padding: 10px;
-  font-size: 14px;
 }
 
-/* MOVIE PAGE */
-.page-container {
-  padding-top: 90px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.movie-banner {
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 15px;
-}
-
-.video-player {
-  width: 100%;
-  margin-top: 15px;
-  border-radius: 12px;
-}
-
-.stars span {
-  cursor: pointer;
-  font-size: 22px;
-  color: gray;
-}
-
-.active-star {
-  color: gold;
-}
-.hero {
-  height: 70vh;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-}
-
-.hero-overlay {
-  background: linear-gradient(to top, black, transparent);
-  height: 100%;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: end;
-}
-
-.hero-buttons button {
-  margin-right: 10px;
-  padding: 10px 15px;
-  background: red;
+input {
+  padding: 8px;
+  width: 250px;
+  margin-bottom: 30px;
+  border-radius: 4px;
   border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.modal {
-  position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.9);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.modal-content video {
-  width:90%;
-  max-height:80vh;
-}
-
-.close {
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:red;
-  border:none;
-  color:white;
-  padding:10px;
 }
