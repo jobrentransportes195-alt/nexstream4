@@ -30,7 +30,25 @@ function Home() {
   function loadPlaylist(text: string) {
     const lines = text.split("\n");
     const items: Channel[] = [];
+    const [playlistUrl, setPlaylistUrl] = useState("");
 
+async function loadFromUrl() {
+  if (!playlistUrl) {
+    alert("Cole o link da playlist.");
+    return;
+  }
+
+  try {
+    const response = await fetch(playlistUrl);
+    const text = await response.text();
+
+    localStorage.setItem("customPlaylist", text);
+    loadPlaylist(text);
+    alert("Playlist carregada com sucesso!");
+  } catch (err) {
+    alert("Erro ao carregar playlist.");
+  }
+}
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].startsWith("#EXTINF")) {
         const info = lines[i];
