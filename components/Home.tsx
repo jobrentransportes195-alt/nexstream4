@@ -145,17 +145,19 @@ function Home() {
                     selectedChannel?.url === ch.url ? "active-channel" : ""
                   }`}
                 >
-                  <div
-                    className="card-image"
-                    onClick={() => setSelectedChannel(ch)}
-                  >
-                    <div className="live-badge">AO VIVO</div>
+                   <div className="card-image" onClick={() => setSelectedChannel(ch)}>
+  {ch.url && (
+    <div className="live-badge">
+      AO VIVO
+    </div>
+  )}
 
-                    <img src={ch.logo} alt={ch.name} />
+  {ch.logo && <img src={ch.logo} alt={ch.name} />}
 
-                    <div className="overlay-play">▶</div>
-                  </div>
-
+  <div className="overlay-play">
+    ▶
+  </div>
+</div>
                   <p>{ch.name}</p>
 
                   <button
