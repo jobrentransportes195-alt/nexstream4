@@ -123,3 +123,78 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* ================= LOGIN PREMIUM ================= */
+
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, #050d1a, #0f2744);
+}
+
+.login-card {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 350px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  animation: fadeIn 0.5s ease;
+}
+
+.login-title {
+  font-size: 28px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff00cc, #3333ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-subtitle {
+  font-size: 13px;
+  margin-bottom: 25px;
+  color: #ccc;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff00cc, #3333ff);
+  color: white;
+  transition: 0.3s;
+}
+
+.login-card button:hover {
+  opacity: 0.8;
+}
+
+.register-btn {
+  margin-top: 10px;
+  background: transparent !important;
+  border: 1px solid #666 !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
