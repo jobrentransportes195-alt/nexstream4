@@ -19,6 +19,9 @@ function Home() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  /* =========================
+     LOAD DATA
+  ========================== */
   useEffect(() => {
     const savedFav = localStorage.getItem("favorites");
     if (savedFav) setFavorites(JSON.parse(savedFav));
@@ -53,6 +56,9 @@ function Home() {
       });
   }, []);
 
+  /* =========================
+     PLAYER
+  ========================== */
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
       const video = videoRef.current;
@@ -93,115 +99,151 @@ function Home() {
 
   const groups = [...new Set(filtered.map(c => c.group))];
 
-   : "🤍"}
-      return (
-  <div className="container">
+  /* =========================
+     UI
+  ========================== */
+  return (
+    <div className="container">
 
-    {/* ===== BANNER ===== */}
-    <div className="banner">
-      <div className="banner-content">
-        <h1>NexStream</h1>
-        <p>IPTV Premium Experience</p>
+      {/* BANNER */}
+      <div className="banner">
+        <div className="banner-content">
+          <h1>NexStream</h1>
+          <p>IPTV Premium Experience</p>
 
-        {lastChannel && (
-          <button
-            className="play-banner-btn"
-            onClick={() => setSelectedChannel(lastChannel)}
-          >
-            ▶ Continuar Assistindo
-          </button>
-        )}
+          {lastChannel && (
+            <button
+              className="play-banner-btn"
+              onClick={() => {
+                setSelectedChannel(lastChannel);
+                setMiniPlayer(false);
+              }}
+            >
+              ▶ Continuar Assistindo
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* SEARCH */}
+      <input
+        placeholder="Buscar canal..."
+        className="search"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+
+      {/* FAVORITOS */}
+      {favorites.length > 0 && (
+        <>
+          <h2 className="category-title">❤️ Meus Favoritos</h2>
+          <div className="horizontal-scroll">
+            {channels
+              .filter(c => favorites.includes(c.url))
+              .map((ch, i) => (
+                <div key={i} className="channel-card">
+                  <div
+                    className="card-image"
+                    onClick={() => {
+                      setSelectedChannel(ch);
+                      setMiniPlayer(false);
+                    }}
+                  >
+                    {ch.logo && <img src={ch.logo} alt={ch.name} />}
+                    <div className="overlay-play">▶</div>
+                    <div className="live-badge">AO VIVO</div>
+                  </div>
+
+                  <p>{ch.name}</p>
+
+                  <button
+                    className="fav-btn"
+                    onClick={() => toggleFavorite(ch.url)}
+                  >
+                    ❤️
+                  </button>
+                </div>
+              ))}
+          </div>
+        </>
+      )}
+
+      {/* CATEGORIAS */}
+      {groups.map(group => (
+        <div key={group}>
+          <h2 className="category-title">{group}</h2>
+
+          <div className="horizontal-scroll">
+            {filtered
+              .filter(c => c.group === group)
+              .map((ch, i) => (
+                <div key={i} className="channel-card">
+                  <div
+                    className="card-image"
+                    onClick={() => {
+                      setSelectedChannel(ch);
+                      setMiniPlayer(false);
+                    }}
+                  >
+                    {ch.logo && <img src={ch.logo} alt={ch.name} />}
+                    <div className="overlay-play">▶</div>
+                    <div className="live-badge">AO VIVO</div>
+                  </div>
+
+                  <p>{ch.name}</p>
+
+                  <button
+                    className="fav-btn"
+                    onClick={() => toggleFavorite(ch.url)}
+                  >
+                    {favorites.includes(ch.url) ? "❤️" : "🤍"}
+                  </button>
+                </div>
+              ))}
+          </div>
+        </div>
+      ))}
+
+      {/* MODAL PLAYER */}
+      {selectedChannel && (
+        <div className="modal">
+          <div className="modal-content">
+            <button
+              className="close-btn"
+              onClick={() => {
+                setSelectedChannel(null);
+                setMiniPlayer(true);
+              }}
+            >
+              ✖
+            </button>
+
+            {loading && <div className="loader"></div>}
+
+            <video
+              ref={videoRef}
+              controls
+              style={{ width: "100%", borderRadius: "15px" }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* MINI PLAYER */}
+      {miniPlayer && lastChannel && (
+        <div
+          className="mini-player"
+          onClick={() => {
+            setSelectedChannel(lastChannel);
+            setMiniPlayer(false);
+          }}
+        >
+          <video src={lastChannel.url} autoPlay muted />
+        </div>
+      )}
+
     </div>
+  );
+}
 
-    {/* ===== SEARCH ===== */}
-    <input
-      placeholder="Buscar canal..."
-      className="search"
-      value={search}
-      onChange={e => setSearch(e.target.value)}
-    />
-
-    {/* ===== FAVORITOS ===== */}
-    {favorites.length > 0 && (
-      <>
-        <h2 className="category-title">❤️ Meus Favoritos</h2>
-        <div className="horizontal-scroll">
-          {channels
-            .filter(c => favorites.includes(c.url))
-            .map((ch, i) => (
-              <div key={i} className="channel-card">
-                <div className="card-image" onClick={() => setSelectedChannel(ch)}>
-                  {ch.logo && <img src={ch.logo} alt={ch.name} />}
-                  <div className="overlay-play">▶</div>
-                  <div className="live-badge">AO VIVO</div>
-                </div>
-
-                <p>{ch.name}</p>
-
-                <button
-                  className="fav-btn"
-                  onClick={() => toggleFavorite(ch.url)}
-                >
-                  ❤️
-                </button>
-              </div>
-            ))}
-        </div>
-      </>
-    )}
-
-    {/* ===== CATEGORIAS ===== */}
-    {groups.map(group => (
-      <div key={group}>
-        <h2 className="category-title">{group}</h2>
-
-        <div className="horizontal-scroll">
-          {filtered
-            .filter(c => c.group === group)
-            .map((ch, i) => (
-              <div key={i} className="channel-card">
-                <div className="card-image" onClick={() => setSelectedChannel(ch)}>
-                  {ch.logo && <img src={ch.logo} alt={ch.name} />}
-                  <div className="overlay-play">▶</div>
-                  <div className="live-badge">AO VIVO</div>
-                </div>
-
-                <p>{ch.name}</p>
-
-                <button
-                  className="fav-btn"
-                  onClick={() => toggleFavorite(ch.url)}
-                >
-                  {favorites.includes(ch.url) ? "❤️" : "🤍"}
-                </button>
-              </div>
-            ))}
-        </div>
-      </div>
-    ))}
-
-    {/* ===== PLAYER ===== */}
-    {selectedChannel && (
-      <div className="modal">
-        <div className="modal-content">
-          <button
-            className="close-btn"
-            onClick={() => setSelectedChannel(null)}
-          >
-            ✖
-          </button>
-
-          {loading && <div className="loader"></div>}
-
-          <video
-            ref={videoRef}
-            controls
-            style={{ width: "100%", borderRadius: "15px" }}
-          />
-        </div>
-      </div>
-    )}
-
-  </div>
-);
+export default Home;
