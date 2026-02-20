@@ -254,3 +254,41 @@ body::before {
   from { transform: translate(0,0); }
   to { transform: translate(-50px,-50px); }
 }
+.active-channel {
+  border: 2px solid #00b4ff;
+  box-shadow: 0 0 25px rgba(0,180,255,0.8);
+}
+.live-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: red;
+  padding: 3px 8px;
+  font-size: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1 }
+  50% { opacity: 0.5 }
+  100% { opacity: 1 }
+}
+
+.overlay-play {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  opacity: 0;
+  transition: 0.3s ease;
+  border-radius: 12px;
+}
+
+.card-image:hover .overlay-play {
+  opacity: 1;
+}
