@@ -1,69 +1,61 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(180deg, #071a2c, #0d2b45);
+  background: #050d1a;
   color: white;
 }
 
 /* Container */
-.smart-container {
-  padding: 30px 20px;
+.premium-container {
+  padding: 20px;
+}
+
+/* Header */
+.premium-header {
   text-align: center;
-}
-
-/* Título */
-.smart-title {
-  font-size: 32px;
-  margin-bottom: 40px;
+  padding: 20px;
+  font-size: 26px;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #ff00cc, #3333ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Grid */
-.smart-grid {
+/* Grid categorias */
+.premium-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 25px;
-  max-width: 900px;
-  margin: auto;
+  margin-top: 30px;
 }
 
-/* Card base */
-.smart-card {
-  padding: 50px 15px;
-  border-radius: 18px;
-  font-size: 16px;
-  font-weight: bold;
+/* Card categoria */
+.premium-card {
+  height: 150px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+  position: relative;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  overflow: hidden;
+  transition: 0.4s;
 }
 
-/* Cores diferentes */
-.smart-card:nth-child(1) {
-  background: linear-gradient(135deg, #ff00cc, #3333ff);
+.premium-card:hover {
+  transform: scale(1.05);
 }
 
-.smart-card:nth-child(2) {
-  background: linear-gradient(135deg, #ff512f, #dd2476);
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
 }
 
-.smart-card:nth-child(3) {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-}
-
-.smart-card:nth-child(4) {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
-}
-
-.smart-card:hover {
-  transform: translateY(-8px) scale(1.05);
-}
-
-/* Categoria */
-.category-title {
-  margin: 20px 0;
-  font-size: 22px;
+.card-overlay h2 {
+  margin: 0;
 }
 
 /* Grid canais */
@@ -71,41 +63,62 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 15px;
-  padding: 10px;
+  margin-top: 20px;
 }
 
 .channel-card {
-  background: #142b45;
-  padding: 18px;
-  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
   cursor: pointer;
   transition: 0.3s;
 }
 
 .channel-card:hover {
-  background: #1f3b5e;
+  background: rgba(255,255,255,0.15);
 }
 
-/* Player */
-.player-modal {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: black;
-  padding: 10px;
-  box-shadow: 0 -5px 20px rgba(0,0,0,0.7);
-}
-
-video {
+.channel-card img {
   width: 100%;
   border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+/* Player full */
+.player-fullscreen {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.player-fullscreen video {
+  width: 95%;
+  max-height: 80vh;
+  border-radius: 15px;
+}
+
+.close-player {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: red;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 .back-btn {
+  margin-top: 10px;
   background: #ff0040;
   border: none;
-  padding: 10px 15px;
+  padding: 8px 12px;
   color: white;
   border-radius: 8px;
   cursor: pointer;
