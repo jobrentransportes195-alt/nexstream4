@@ -96,21 +96,32 @@ function Home() {
     <div className="container">
 
       {/* 🔥 BANNER */}
-      <div className="banner">
-        <div className="banner-content">
-          <h1>NexStream</h1>
-          <p>IPTV Premium Experience</p>
+      <div
+  className="banner"
+  style={{
+    backgroundImage: selectedChannel?.logo
+      ? `linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.4)), url(${selectedChannel.logo})`
+      : undefined
+  }}
+>
+  <div className="banner-content">
+    <h1>{selectedChannel ? selectedChannel.name : "NexStream"}</h1>
+    <p>
+      {selectedChannel
+        ? "Transmissão ao vivo"
+        : "IPTV Premium Experience"}
+    </p>
 
-          {lastChannel && (
-            <button
-              className="play-banner-btn"
-              onClick={() => setSelectedChannel(lastChannel)}
-            >
-              ▶ Continuar Assistindo
-            </button>
-          )}
-        </div>
-      </div>
+    {lastChannel && (
+      <button
+        className="play-banner-btn"
+        onClick={() => setSelectedChannel(lastChannel)}
+      >
+        ▶ Continuar Assistindo
+      </button>
+    )}
+  </div>
+</div>
 
       {/* 🔎 BUSCA */}
       <input
