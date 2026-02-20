@@ -75,3 +75,74 @@ body {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
+.container {
+  padding: 20px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  padding: 40px 20px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.hero p {
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
+.search {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  margin-bottom: 25px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.category-title {
+  margin: 20px 0 10px;
+  font-size: 18px;
+}
+
+.horizontal-scroll {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  min-width: 160px;
+  background: linear-gradient(145deg, #12263f, #0c1b30);
+  padding: 15px;
+  border-radius: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.channel-logo {
+  width: 100%;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.channel-name {
+  font-size: 14px;
+}
