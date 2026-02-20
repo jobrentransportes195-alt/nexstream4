@@ -116,8 +116,7 @@ const [search, setSearch] = useState("");
     {lastChannel && (
       <button
         className="play-banner-btn"
-        onClick={() => setSelectedChannel(lastChannel)}
-      >
+       const [miniPlayer, setMiniPlayer] = useState(false);>
         ▶ Continuar Assistindo
       </button>
     )}
