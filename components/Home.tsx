@@ -18,7 +18,17 @@ function Home() {
   const [miniPlayer, setMiniPlayer] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
+function handlePlaylistUpload(file: File) {
+  const reader = new FileReader();
 
+  reader.onload = function (e) {
+    const text = e.target?.result as string;
+    localStorage.setItem("customPlaylist", text);
+    window.location.reload();
+  };
+
+  reader.readAsText(file);
+}
   /* =========================
      LOAD DATA
   ========================== */
