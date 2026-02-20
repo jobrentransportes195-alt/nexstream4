@@ -9,19 +9,25 @@ export default function App() {
 
   useEffect(() => {
     const getSession = async () => {
-      try {
-        const { data } = await supabase.auth.getSession();
-        setUser(data.session?.user ?? null);
-      } catch (err) {
-        console.log("Erro sessão:", err);
-      }
+      const { data } = await supabase.auth.getSession();
+      setUser(data.session?.user ?? null);
       setLoading(false);
     };
 
     getSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
-  if (loading) return null;
+  if (loading) return <div>Carregando...</div>;
 
   return user ? <Home /> : <Login />;
 }
