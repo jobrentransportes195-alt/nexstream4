@@ -1,54 +1,53 @@
 body {
   margin: 0;
-  background: #0f0f0f;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(180deg, #0f1c2e, #08121f);
   color: white;
-  font-family: Arial, sans-serif;
-}
-
-.header {
-  background: black;
-  padding: 20px;
-  font-size: 22px;
-  font-weight: bold;
-  color: red;
 }
 
 .container {
-  padding: 20px;
+  padding: 25px;
 }
 
 .search {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border-radius: 8px;
+  padding: 14px 20px;
+  border-radius: 25px;
   border: none;
-  background: #1e1e1e;
-  color: white;
   font-size: 16px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  margin-bottom: 30px;
+  outline: none;
+  backdrop-filter: blur(10px);
+}
+
+.search::placeholder {
+  color: rgba(255,255,255,0.5);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 20px;
 }
 
 .card {
-  background: #1a1a1a;
-  padding: 40px 20px;
-  border-radius: 12px;
+  background: linear-gradient(145deg, #12263f, #0c1b30);
+  padding: 40px 15px;
+  border-radius: 20px;
   text-align: center;
   cursor: pointer;
-  transition: 0.3s;
-  font-size: 18px;
+  transition: 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
 .card:hover {
-  background: red;
-  transform: scale(1.05);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 .channel-name {
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 16px;
 }
