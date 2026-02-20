@@ -8,14 +8,16 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getSession = async () => {
+    // 🔥 Pega sessão atual
+    const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       setUser(data.session?.user ?? null);
       setLoading(false);
     };
 
-    getSession();
+    checkSession();
 
+    // 🔥 Escuta login/logout
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -27,7 +29,9 @@ export default function App() {
     };
   }, []);
 
-  if (loading) return <div>Carregando...</div>;
+  if (loading) {
+    return null; // não trava mais em "carregando"
+  }
 
   return user ? <Home /> : <Login />;
 }
