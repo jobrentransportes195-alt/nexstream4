@@ -1,15 +1,16 @@
+import Header from "./components/Header";
+
 export default function App() {
+  function fakeLogout() {
+    console.log("logout");
+  }
+
   return (
-    <div style={{
-      background: "black",
-      color: "white",
-      height: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: 24
-    }}>
-      APP RENDERIZANDO
-    </div>
+    <>
+      <Header onLogout={fakeLogout} />
+      <div style={{ marginTop: 120, color: "white" }}>
+        HEADER OK
+      </div>
+    </>
   );
 }
