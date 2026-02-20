@@ -1,4 +1,23 @@
-/* ===== BASE ===== */
+/* ===== MINI PLAYER ===== */
+.mini-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+  height: 120px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  z-index: 9999;
+  cursor: pointer;
+  animation: fadeIn 0.4s ease;
+}
+
+.mini-player video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}/* ===== BASE ===== */
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
