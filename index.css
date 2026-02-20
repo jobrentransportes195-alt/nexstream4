@@ -212,3 +212,37 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 15px;
 }
+.continue-box {
+  background: linear-gradient(135deg, #00b4ff, #0077ff);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.continue-box:hover {
+  transform: scale(1.02);
+}
+
+.loader {
+  border: 5px solid rgba(255,255,255,0.2);
+  border-top: 5px solid #00b4ff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
