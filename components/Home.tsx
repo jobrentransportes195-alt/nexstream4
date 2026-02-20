@@ -23,38 +23,48 @@ function Home() {
      LOAD DATA
   ========================== */
   useEffect(() => {
-    const savedFav = localStorage.getItem("favorites");
-    if (savedFav) setFavorites(JSON.parse(savedFav));
+  const savedFav = localStorage.getItem("favorites");
+  if (savedFav) setFavorites(JSON.parse(savedFav));
 
-    const savedLast = localStorage.getItem("lastChannel");
-    if (savedLast) setLastChannel(JSON.parse(savedLast));
+  const savedLast = localStorage.getItem("lastChannel");
+  if (savedLast) setLastChannel(JSON.parse(savedLast));
 
+  const savedPlaylist = localStorage.getItem("customPlaylist");
+
+  const loadPlaylist = (text: string) => {
+    const lines = text.split("\n").map(l => l.trim());
+    const items: Channel[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith("#EXTINF")) {
+        const info = lines[i];
+        const name = (info.split(",")[1] || "Canal").trim();
+
+        const groupMatch = info.match(/group-title="(.*?)"/);
+        const group = groupMatch ? groupMatch[1] : "Outros";
+
+        const logoMatch = info.match(/tvg-logo="(.*?)"/);
+        const logo = logoMatch ? logoMatch[1] : undefined;
+
+        const url = (lines[i + 1] || "").trim();
+        if (url && !url.startsWith("#")) {
+          items.push({ name, url, group, logo });
+        }
+      }
+    }
+
+    setChannels(items);
+  };
+
+  if (savedPlaylist) {
+    loadPlaylist(savedPlaylist);
+  } else {
     fetch("/lista.m3u")
       .then(res => res.text())
-      .then(text => {
-        const lines = text.split("\n");
-        const items: Channel[] = [];
-
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].startsWith("#EXTINF")) {
-            const info = lines[i];
-            const name = info.split(",")[1];
-
-            const groupMatch = info.match(/group-title="(.*?)"/);
-            const group = groupMatch ? groupMatch[1] : "Outros";
-
-            const logoMatch = info.match(/tvg-logo="(.*?)"/);
-            const logo = logoMatch ? logoMatch[1] : undefined;
-
-            const url = lines[i + 1];
-            const [customPlaylist, setCustomPlaylist] = useState<string | null>(null);
-            items.push({ name, url, group, logo });
-          }
-        }
-
-        setChannels(items);
-      });
-  }, []);
+      .then(text => loadPlaylist(text))
+      .catch(() => setChannels([]));
+  }
+}, []);
 
   /* =========================
      PLAYER
