@@ -5,22 +5,37 @@ import Login from "./components/Login";
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // ==========================
+  // PEGAR SESSÃO
+  // ==========================
   useEffect(() => {
-    // 🔥 Pega sessão atual
-    const checkSession = async () => {
+    const getSession = async () => {
       const { data } = await supabase.auth.getSession();
-      setUser(data.session?.user ?? null);
+      const currentUser = data.session?.user ?? null;
+      setUser(currentUser);
+
+      if (currentUser) {
+        await fetchProfile(currentUser.id);
+      }
+
       setLoading(false);
     };
 
-    checkSession();
+    getSession();
 
-    // 🔥 Escuta login/logout
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
+      async (_event, session) => {
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+
+        if (currentUser) {
+          await fetchProfile(currentUser.id);
+        } else {
+          setProfile(null);
+        }
       }
     );
 
@@ -29,9 +44,69 @@ export default function App() {
     };
   }, []);
 
-  if (loading) {
-    return null; // não trava mais em "carregando"
+  // ==========================
+  // BUSCAR PROFILE
+  // ==========================
+  async function fetchProfile(userId: string) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    setProfile(data);
   }
 
-  return user ? <Home /> : <Login />;
+  // ==========================
+  // BLOQUEIO AUTOMÁTICO
+  // ==========================
+  function isBlocked() {
+    if (!profile) return false;
+
+    if (profile.blocked) return true;
+
+    if (profile.expires_at) {
+      const now = new Date();
+      const expire = new Date(profile.expires_at);
+      if (expire < now) return true;
+    }
+
+    return false;
+  }
+
+  if (loading) {
+    return (
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#0a0a0a",
+        color: "white"
+      }}>
+        Carregando...
+      </div>
+    );
+  }
+
+  if (!user) return <Login />;
+
+  if (isBlocked()) {
+    return (
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#0a0a0a",
+        color: "white",
+        flexDirection: "column"
+      }}>
+        <h2>🚫 Plano Expirado ou Conta Bloqueada</h2>
+        <p>Entre em contato para renovar seu acesso.</p>
+      </div>
+    );
+  }
+
+  return <Home profile={profile} />;
 }
