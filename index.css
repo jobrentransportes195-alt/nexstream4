@@ -246,3 +246,45 @@ body {
   from { opacity: 0 }
   to { opacity: 1 }
 }
+.category-title {
+  font-size: 20px;
+  margin: 25px 0 10px 10px;
+  color: #fff;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding: 10px;
+  scroll-behavior: smooth;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.channel-card {
+  min-width: 160px;
+  background: #141414;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.channel-card:hover {
+  transform: scale(1.08);
+}
+
+.channel-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.channel-card p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+}
