@@ -3,74 +3,90 @@ import { supabase } from "../services/supabase";
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<any[]>([]);
-  const [movies, setMovies] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>({});
 
   useEffect(() => {
-    fetchData();
+    fetchUsers();
   }, []);
 
-  async function fetchData() {
-    const { data: userData } = await supabase.from("profiles").select("*");
-    const { data: movieData } = await supabase.from("movies").select("*");
-    const { count: favCount } = await supabase
-      .from("favorites")
-      .select("*", { count: "exact", head: true });
+  async function fetchUsers() {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-    setUsers(userData || []);
-    setMovies(movieData || []);
-    setStats({
-      users: userData?.length || 0,
-      movies: movieData?.length || 0,
-      favorites: favCount || 0
-    });
+    setUsers(data || []);
   }
 
-  async function deleteMovie(id: string) {
-    await supabase.from("movies").delete().eq("id", id);
-    fetchData();
-  }
+  async function updatePlan(id: string, plan: string, months: number) {
+    const expire = new Date();
+    expire.setMonth(expire.getMonth() + months);
 
-  async function toggleAdmin(userId: string, currentRole: string) {
     await supabase
       .from("profiles")
-      .update({ role: currentRole === "admin" ? "user" : "admin" })
-      .eq("id", userId);
+      .update({
+        plan,
+        expires_at: expire,
+        blocked: false
+      })
+      .eq("id", id);
 
-    fetchData();
+    fetchUsers();
+  }
+
+  async function blockUser(id: string) {
+    await supabase
+      .from("profiles")
+      .update({ blocked: true })
+      .eq("id", id);
+
+    fetchUsers();
+  }
+
+  async function unblockUser(id: string) {
+    await supabase
+      .from("profiles")
+      .update({ blocked: false })
+      .eq("id", id);
+
+    fetchUsers();
+  }
+
+  async function deleteUser(id: string) {
+    await supabase
+      .from("profiles")
+      .delete()
+      .eq("id", id);
+
+    fetchUsers();
   }
 
   return (
-    <div style={{ padding: 30, color: "white" }}>
-      <h1>👑 Painel Administrativo</h1>
+    <div style={{ padding: 30, background: "#0f172a", minHeight: "100vh", color: "white" }}>
+      <h1>👑 Painel Admin</h1>
 
-      <div style={{ display: "flex", gap: 20, marginBottom: 30 }}>
-        <div className="admin-card">
-          👥 Usuários: {stats.users}
-        </div>
-        <div className="admin-card">
-          🎬 Canais: {stats.movies}
-        </div>
-        <div className="admin-card">
-          ⭐ Favoritos: {stats.favorites}
-        </div>
-      </div>
-
-      <h2>📺 Gerenciar Canais</h2>
-      {movies.map(movie => (
-        <div key={movie.id} className="admin-row">
-          {movie.title}
-          <button onClick={() => deleteMovie(movie.id)}>❌ Excluir</button>
-        </div>
-      ))}
-
-      <h2 style={{ marginTop: 40 }}>👥 Gerenciar Usuários</h2>
       {users.map(user => (
-        <div key={user.id} className="admin-row">
-          {user.email} — {user.role}
-          <button onClick={() => toggleAdmin(user.id, user.role)}>
-            🔁 Tornar {user.role === "admin" ? "Usuário" : "Admin"}
-          </button>
+        <div key={user.id} style={{
+          background: "#111827",
+          padding: 15,
+          marginBottom: 15,
+          borderRadius: 10
+        }}>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Plano:</strong> {user.plan}</p>
+          <p><strong>Expira:</strong> {user.expires_at || "Sem data"}</p>
+          <p><strong>Bloqueado:</strong> {user.blocked ? "Sim" : "Não"}</p>
+
+          <div style={{ marginTop: 10 }}>
+            <button onClick={() => updatePlan(user.id, "mensal", 1)}>Mensal</button>
+            <button onClick={() => updatePlan(user.id, "trimestral", 3)}>Trimestral</button>
+            <button onClick={() => updatePlan(user.id, "anual", 12)}>Anual</button>
+          </div>
+
+          <div style={{ marginTop: 10 }}>
+            <button onClick={() => blockUser(user.id)}>Bloquear</button>
+            <button onClick={() => unblockUser(user.id)}>Desbloquear</button>
+            <button onClick={() => deleteUser(user.id)}>Excluir</button>
+          </div>
         </div>
       ))}
     </div>
