@@ -211,3 +211,28 @@ body {
   height: 100%;
   object-fit: cover;
 }
+/* ===== FORCE OVERRIDE ===== */
+
+.channel-card {
+  background: linear-gradient(160deg, #0f172a, #111827) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6) !important;
+}
+
+.channel-card:hover {
+  transform: translateY(-6px) scale(1.05) !important;
+}
+
+.live-badge {
+  background: linear-gradient(45deg, #ff0000, #ff4d4d) !important;
+  border-radius: 20px !important;
+}
+
+.category-title {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+}
+
+body {
+  background: radial-gradient(circle at top, #0a1a2f, #05090f 70%) !important;
+}
