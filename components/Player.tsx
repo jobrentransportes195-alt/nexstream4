@@ -4,12 +4,12 @@ function Player() {
   const { url } = useParams();
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ background: "black", height: "100vh" }}>
       <video
+        src={decodeURIComponent(url!)}
         controls
         autoPlay
-        width="100%"
-        src={decodeURIComponent(url!)}
+        style={{ width: "100%", height: "100%" }}
       />
     </div>
   );
