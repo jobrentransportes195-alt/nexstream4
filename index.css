@@ -14,7 +14,10 @@ body {
   background: radial-gradient(circle at top, var(--bg1), var(--bg2) 70%);
   color: #fff;
 }
-
+body {
+  margin: 0;
+  overflow: hidden;
+}
 /* =========================
    HOME (layout do print)
 ========================= */
