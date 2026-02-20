@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
-useEffect(() => {
-  const saved = localStorage.getItem("savedPlaylist");
 
-  if (saved) {
-    parseM3U(saved);
-  }
-}, []);
 interface Channel {
   name: string;
   url: string;
@@ -15,44 +9,64 @@ interface Channel {
 }
 
 export default function Home() {
+
   const [channels, setChannels] = useState<Channel[]>([]);
   const [search, setSearch] = useState("");
   const [playlistUrl, setPlaylistUrl] = useState("");
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
+
   const videoRef = useRef<HTMLVideoElement>(null);
-useEffect(() => {
-  if (!selectedChannel || !videoRef.current) return;
 
-  const video = videoRef.current;
+  // ==============================
+  // CARREGAR PLAYLIST SALVA
+  // ==============================
+  useEffect(() => {
+    const saved = localStorage.getItem("savedPlaylist");
+    if (saved) {
+      parseM3U(saved);
+    }
+  }, []);
 
-  if (Hls.isSupported()) {
-    const hls = new Hls();
-    hls.loadSource(selectedChannel.url);
-    hls.attachMedia(video);
+  // ==============================
+  // PLAYER
+  // ==============================
+  useEffect(() => {
+    if (!selectedChannel || !videoRef.current) return;
 
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+    const video = videoRef.current;
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(selectedChannel.url);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+
+      return () => {
+        hls.destroy();
+      };
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = selectedChannel.url;
       video.play();
-    });
+    }
 
-    return () => {
-      hls.destroy();
-    };
-  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-    video.src = selectedChannel.url;
-    video.play();
-  }
+  }, [selectedChannel]);
 
-}, [selectedChannel]);
   // ==============================
   // PARSE M3U
   // ==============================
   function parseM3U(text: string) {
+
+    localStorage.setItem("savedPlaylist", text);
+
     const lines = text.split("\n").map(l => l.trim());
     const items: Channel[] = [];
 
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].startsWith("#EXTINF")) {
-        const info = lines[i];
-        const name = info.split(",")[1] || "Canal";
+        const name = lines[i].split(",")[1] || "Canal";
         const url = lines[i + 1];
 
         if (url && !url.startsWith("#")) {
@@ -69,7 +83,7 @@ useEffect(() => {
   }
 
   // ==============================
-  // UPLOAD POR ARQUIVO
+  // IMPORTAR ARQUIVO
   // ==============================
   function handleFileUpload(file: File) {
     const reader = new FileReader();
@@ -81,7 +95,7 @@ useEffect(() => {
   }
 
   // ==============================
-  // IMPORTAR POR LINK
+  // IMPORTAR LINK
   // ==============================
   async function handleImportByLink() {
     if (!playlistUrl) return;
@@ -104,29 +118,22 @@ useEffect(() => {
 
       <h1 className="title">NexStream</h1>
 
-      {/* IMPORTAR POR LINK */}
-      <div style={{ marginBottom: 20 }}>
+      {/* IMPORTAR LINK */}
+      <div style={{ marginBottom: 15 }}>
         <input
           type="text"
-          placeholder="Cole o link da playlist M3U"
+          placeholder="Cole o link da playlist"
           value={playlistUrl}
           onChange={(e) => setPlaylistUrl(e.target.value)}
-          style={{ padding: 10, width: "70%" }}
         />
-        <button onClick={handleImportByLink} style={{ padding: 10 }}>
+        <button onClick={handleImportByLink}>
           Importar Link
         </button>
       </div>
 
-      {/* IMPORTAR POR ARQUIVO */}
+      {/* IMPORTAR ARQUIVO */}
       <div style={{ marginBottom: 20 }}>
-        <label style={{
-          background: "linear-gradient(90deg,#ff00cc,#3333ff)",
-          padding: 10,
-          borderRadius: 8,
-          cursor: "pointer",
-          color: "white"
-        }}>
+        <label className="upload-btn">
           📂 Importar Arquivo M3U
           <input
             type="file"
@@ -146,11 +153,10 @@ useEffect(() => {
         placeholder="Buscar canal..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        style={{ padding: 10, marginBottom: 20 }}
       />
 
       {/* LISTA */}
-      <div>
+      <div style={{ marginTop: 20 }}>
         {filtered.map((ch, i) => (
           <div
             key={i}
@@ -162,17 +168,7 @@ useEffect(() => {
               cursor: "pointer",
               color: "white"
             }}
-            onClick={() => {
-              if (videoRef.current) {
-                if (Hls.isSupported()) {
-                  const hls = new Hls();
-                  hls.loadSource(ch.url);
-                  hls.attachMedia(videoRef.current);
-                } else {
-                  videoRef.current.src = ch.url;
-                }
-              }
-            }}
+            onClick={() => setSelectedChannel(ch)}
           >
             {ch.name}
           </div>
@@ -180,11 +176,14 @@ useEffect(() => {
       </div>
 
       {/* PLAYER */}
-      <video
-        ref={videoRef}
-        controls
-        style={{ width: "100%", marginTop: 20 }}
-      />
+      {selectedChannel && (
+        <video
+          ref={videoRef}
+          controls
+          style={{ width: "100%", marginTop: 20 }}
+        />
+      )}
+
     </div>
   );
 }
