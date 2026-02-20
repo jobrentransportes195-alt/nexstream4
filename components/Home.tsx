@@ -17,7 +17,7 @@ function Home() {
   const [loading, setLoading] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-
+  const [miniPlayer, setMiniPlayer] = useState(false);
   useEffect(() => {
     const savedFav = localStorage.getItem("favorites");
     if (savedFav) setFavorites(JSON.parse(savedFav));
