@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Channel {
   name: string;
@@ -11,9 +10,13 @@ interface Channel {
 function Home() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [search, setSearch] = useState("");
-  const navigate = useNavigate();
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
 
   useEffect(() => {
+    const savedFav = localStorage.getItem("favorites");
+    if (savedFav) setFavorites(JSON.parse(savedFav));
+
     fetch("/lista.m3u")
       .then(res => res.text())
       .then(text => {
@@ -41,6 +44,19 @@ function Home() {
       });
   }, []);
 
+  function toggleFavorite(url: string) {
+    let updated;
+
+    if (favorites.includes(url)) {
+      updated = favorites.filter(f => f !== url);
+    } else {
+      updated = [...favorites, url];
+    }
+
+    setFavorites(updated);
+    localStorage.setItem("favorites", JSON.stringify(updated));
+  }
+
   const filtered = channels.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -49,13 +65,12 @@ function Home() {
 
   return (
     <div className="container">
-      {/* 🔥 Banner Principal */}
+
       <div className="hero">
         <h1>TV Ao Vivo</h1>
-        <p>Assista seus canais favoritos em alta qualidade</p>
+        <p>Assista seus canais favoritos</p>
       </div>
 
-      {/* 🔍 Busca */}
       <input
         placeholder="Buscar canal..."
         className="search"
@@ -63,7 +78,6 @@ function Home() {
         onChange={e => setSearch(e.target.value)}
       />
 
-      {/* 📂 Categorias */}
       {categories.map(category => (
         <div key={category}>
           <h2 className="category-title">{category}</h2>
@@ -72,26 +86,53 @@ function Home() {
             {filtered
               .filter(c => c.group === category)
               .map((ch, i) => (
-                <div
-                  key={i}
-                  className="card"
-                  onClick={() =>
-                    navigate(`/player/${encodeURIComponent(ch.url)}`)
-                  }
-                >
+                <div key={i} className="card">
+
                   {ch.logo && (
                     <img
                       src={ch.logo}
                       alt={ch.name}
                       className="channel-logo"
+                      onClick={() => setSelectedChannel(ch)}
                     />
                   )}
+
                   <div className="channel-name">{ch.name}</div>
+
+                  <button
+                    className="fav-btn"
+                    onClick={() => toggleFavorite(ch.url)}
+                  >
+                    {favorites.includes(ch.url) ? "❤️" : "🤍"}
+                  </button>
+
                 </div>
               ))}
           </div>
         </div>
       ))}
+
+      {/* PLAYER MODAL */}
+      {selectedChannel && (
+        <div className="modal">
+          <div className="modal-content">
+            <button
+              className="close-btn"
+              onClick={() => setSelectedChannel(null)}
+            >
+              ✖
+            </button>
+
+            <video
+              src={selectedChannel.url}
+              controls
+              autoPlay
+              style={{ width: "100%", borderRadius: "15px" }}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
