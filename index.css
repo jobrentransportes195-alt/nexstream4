@@ -12,25 +12,56 @@ body {
 }
 
 /* ===== HERO ===== */
-.hero {
+.banner {
   position: relative;
-  padding: 50px 25px;
+  height: 280px;
   border-radius: 25px;
-  margin-bottom: 25px;
-  background: linear-gradient(135deg, #141e30, #243b55);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
   overflow: hidden;
+  margin-bottom: 30px;
+  background: url("https://images.unsplash.com/photo-1505685296765-3a2736de412f") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.7);
 }
 
-.hero::after {
+.banner::before {
   content: "";
   position: absolute;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(0,150,255,0.4), transparent 70%);
-  top: -100px;
-  right: -100px;
-  filter: blur(80px);
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.9), rgba(0,0,0,0.4));
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 60%;
+}
+
+.banner h1 {
+  font-size: 32px;
+  margin: 0;
+}
+
+.banner p {
+  opacity: 0.8;
+  margin: 10px 0 20px;
+}
+
+.play-banner-btn {
+  background: #00b4ff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.play-banner-btn:hover {
+  background: #0094d6;
+  transform: scale(1.05);
 }
 
 /* ===== CONTINUE ===== */
