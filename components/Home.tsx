@@ -6,12 +6,15 @@ export default function Home({ category }: any) {
   const navigate = useNavigate();
   const [movies, setMovies] = useState<any[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchMovies();
   }, [category]);
 
   async function fetchMovies() {
+    setLoading(true);
+
     let query = supabase.from("movies").select("*");
 
     if (category !== "Home") {
@@ -20,32 +23,57 @@ export default function Home({ category }: any) {
 
     const { data } = await query;
     setMovies(data || []);
+    setLoading(false);
   }
 
   const filtered = movies.filter((m) =>
-    m?.title?.toLowerCase()?.includes(search.toLowerCase())
+    m.title?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const hero = filtered[0];
+
   return (
-    <div style={{ paddingTop: 120, paddingLeft: 20 }}>
+    <div className="home-container">
+
+      {/* HERO */}
+      {hero && (
+        <div
+          className="hero"
+          style={{ backgroundImage: `url(${hero.image})` }}
+        >
+          <div className="hero-overlay">
+            <h1>{hero.title}</h1>
+            <p>{hero.description}</p>
+            <button onClick={() => navigate(`/filme/${hero.id}`)}>
+              ▶ Assistir
+            </button>
+          </div>
+        </div>
+      )}
+
       <input
         placeholder="Buscar..."
-        value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+      {loading && <p>Carregando...</p>}
+
+      {!loading && filtered.length === 0 && (
+        <p style={{ marginTop: 40 }}>Nenhum filme encontrado</p>
+      )}
+
+      <div className="grid-container">
         {filtered.map((movie) => (
           <div
             key={movie.id}
+            className="card"
             onClick={() => navigate(`/filme/${movie.id}`)}
-            style={{ cursor: "pointer" }}
           >
-            {movie.image && (
-              <img src={movie.image} width="200" alt={movie.title} />
-            )}
-            <h4>{movie.title}</h4>
-            <p>⭐ {movie.rating}</p>
+            <img src={movie.image} />
+            <div className="card-info">
+              <h4>{movie.title}</h4>
+              <p>⭐ {movie.rating}</p>
+            </div>
           </div>
         ))}
       </div>
