@@ -127,7 +127,12 @@ function Home() {
             {channels
               .filter(c => favorites.includes(c.url))
               .map((ch, i) => (
-                <div key={i} className="channel-card">
+                <div
+  key={i}
+  className={`channel-card ${
+    selectedChannel?.url === ch.url ? "active-channel" : ""
+  }`}
+>
 
                   {ch.logo && (
                     <img
