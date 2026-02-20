@@ -215,11 +215,14 @@ function Home() {
         <div className="modal fade-in">
           <div className="modal-content">
             <button
-              className="close-btn"
-              onClick={() => setSelectedChannel(null)}
-            >
-              ✖
-            </button>
+  className="close-btn"
+  onClick={() => {
+    setMiniPlayer(true);
+    setSelectedChannel(null);
+  }}
+>
+  ✖
+</button>
 
             {loading && <div className="loader"></div>}
 
