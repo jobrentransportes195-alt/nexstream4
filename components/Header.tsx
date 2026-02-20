@@ -1,31 +1,74 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface HeaderProps {
   onLogout: () => void;
-  profile: any;
+  profile: {
+    username?: string;
+    role?: string;
+  } | null;
 }
 
 export default function Header({ onLogout, profile }: HeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  function goTo(path: string) {
+    navigate(path);
+  }
+
+  function isActive(path: string) {
+    return location.pathname === path ? "active-nav" : "";
+  }
 
   return (
     <header className="header">
-      <div className="logo" onClick={() => navigate("/")}>
+      {/* LOGO */}
+      <div className="logo" onClick={() => goTo("/")}>
         NexStream
       </div>
 
+      {/* MENU */}
       <nav className="nav">
-        <button onClick={() => navigate("/")}>Home</button>
-        <button onClick={() => navigate("/filmes")}>Filmes</button>
-        <button onClick={() => navigate("/series")}>Séries</button>
+        <button
+          className={isActive("/")}
+          onClick={() => goTo("/")}
+        >
+          Home
+        </button>
+
+        <button
+          className={isActive("/filmes")}
+          onClick={() => goTo("/filmes")}
+        >
+          Filmes
+        </button>
+
+        <button
+          className={isActive("/series")}
+          onClick={() => goTo("/series")}
+        >
+          Séries
+        </button>
+
         {profile?.role === "admin" && (
-          <button onClick={() => navigate("/admin")}>Admin</button>
+          <button
+            className={isActive("/admin")}
+            onClick={() => goTo("/admin")}
+          >
+            Admin
+          </button>
         )}
       </nav>
 
+      {/* PERFIL */}
       <div className="profile-area">
-        <span>{profile?.username || "Usuário"}</span>
-        <button onClick={onLogout}>Sair</button>
+        <span className="username">
+          {profile?.username || "Usuário"}
+        </span>
+
+        <button className="logout-btn" onClick={onLogout}>
+          Sair
+        </button>
       </div>
     </header>
   );
