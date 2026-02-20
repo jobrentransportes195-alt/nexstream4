@@ -1,22 +1,64 @@
 #EXTM3U
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/5f/TV_Brasil_logo.svg" group-title="Brasil Abertos",TV Brasil
-https://tvbrasil-stream.ebc.com.br/index.m3u8
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/2/2f/TV_Cultura_logo_2013.svg" group-title="Brasil Abertos",TV Cultura
-https://live-culture.hls.adaptive.level3.net/cultura/playlist.m3u8
+######### TV ABERTA #################
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/4/4b/RedeTV%21_logo.svg" group-title="Brasil Abertos",RedeTV
-https://tv01.zas.media:1936/redetv/redetv/playlist.m3u8
+#EXTINF:-1 tvg-id="Globorj.br" tvg-name="GLOBO RJ HD" tvg-logo="http://img.elitehdbr.com/logos/globo.png" group-title="CANAIS ABERTOS",GLOBO RJ HD
+http://128.199.34.33/loadbalance/bobonordeste/chunks.m3u8?pxAuth=VaOoaJFM1EZJGDZnCiFRA4OGxzz1wOHs
+#EXTINF:-1 tvg-id="Globorj.br" tvg-name="GLOBO RJ HD E*" tvg-logo="http://img.elitehdbr.com/logos/globo.png" group-title="CANAIS ABERTOS",GLOBO RJ HD E*
+http://159.203.60.223/loadbalance/bobosp/chunks.m3u8?pxAuth=YHgxHTeBKw0FBuLHOkWe3xvHTOdMkw7F
+#EXTINF:-1 tvg-id="" tvg-name="A FAZENDA 24H HD (apenas Brasil)" tvg-logo="https://assets.r7.com/assets/schumi_hotsites/a-fazenda/logo-16ea21a6ded94688134699bf70b638c6.png" group-title="CANAIS ABERTOS",A FAZENDA 24H HD (apenas Brasil)
+http://afazendaoitohls1-lh.akamaihd.net/i/afazendaoitohls1_1@379189/index_720_av-p.m3u8
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/08/TV_Gazeta_logo.png" group-title="Brasil Abertos",TV Gazeta
-https://gazeta-live.akamaized.net/hls/live/2036627/gazeta/playlist.m3u8
+################ DOCUMENTARIOS ##################
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/3c/Record_News_logo_2019.svg" group-title="Noticias",Record News
-https://cdn.jmvstream.com/w/LVW-10801/LVW10801_1/playlist.m3u8
+#EXTINF:-1 tvg-id="Comedycentral.br" tvg-name="COMEDY CENTRAL ***" tvg-logo="http://i.imgur.com/ZekUX7A.png" group-title="FILMES",COMEDY CENTRAL ***
+http://165.227.100.253/comedycentral/tracks-v1a1/index.m3u8?pxAuth=RKJdMXdWTsLv3RRelMtX606bIxKpV7Nc
+#EXTINF:-1 tvg-id="Homehealth.br" tvg-name="DISCOVERY HOME & HEALTH HD **" tvg-logo="http://i.imgur.com/FJgwtT5.png" group-title="DOCUMENTARIOS",DISCOVERY HOME & HEALTH HD **
+http://185.181.100.218:8081/live/106/chunks.m3u8?nimblesessionid=3997830&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6MjA6NTEgQU0maGFzaF92YWx1ZT1hQnY4OUVyMmtFYUZ3MVdhV215L0hnPT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="Investigacaodiscoveryid.br" tvg-name="ID - INVESTIGAÇÃO DISCOVERY HD ***" tvg-logo="https://s32.postimg.org/xy559rchx/discoveryid.png" group-title="DOCUMENTARIOS",ID - INVESTIGAÇÃO DISCOVERY HD ***
+http://165.227.100.253/investigacaodiscovery/tracks-v1a1/index.m3u8?pxAuth=4IfTPs5cEi55teqs677BKRCFVyHmIcaP
+#EXTINF:-1 tvg-id="Discturbohd.br" tvg-name="DISCOVERY TURBO HD **" tvg-logo="http://i.imgur.com/2vuY35C.png" group-title="DOCUMENTARIOS",DISCOVERY TURBO HD **
+http://185.181.102.2:8081/live/turbo/chunks.m3u8?nimblesessionid=2410037&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6Mzc6NTQgQU0maGFzaF92YWx1ZT02QndCcGRobTdHakdvcHJEbEpHaDhRPT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="Animalplanet.br" tvg-name="ANIMAL PLANET HD ***" tvg-logo="http://img.elitehdbr.com/logos/animalplanet.png" group-title="DOCUMENTARIOS",ANIMAL PLANET HD ***
+http://185.181.100.218:8081/live/30/chunks.m3u8?nimblesessionid=3998222&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6MzU6MjIgQU0maGFzaF92YWx1ZT1JUGNTNGs2WFlWYzVpdm9DUkF3VW93PT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="Discovery.br" tvg-name="DISCOVERY CHANNEL HD **" tvg-logo="http://img.elitehdbr.com/logos/discoverchannel.png" group-title="DOCUMENTARIOS",DISCOVERY CHANNEL HD **
+http://185.181.102.2:8081/live/master04/chunks.m3u8?nimblesessionid=2409974&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6MzY6MjMgQU0maGFzaF92YWx1ZT0xckhrL3dpM0dpb1NJMVJwTzZtZ1R3PT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="Hdtheater.br" tvg-name="DISCOVERY THEATER HD **" tvg-logo="http://i.imgur.com/DHNMh5i.png" group-title="DOCUMENTARIOS",DISCOVERY THEATER HD **
+http://159.203.66.6/discoverytheaterhd/tracks-v1a1/index.m3u8?pxAuth=hE881XBFKLDPdSaGNbCxlodzo9E6m5BY
+#EXTINF:-1 tvg-id="Discoveryworldhd.br" tvg-name="DISCOVERY WORLD  HD **" tvg-logo="http://i.imgur.com/pZLvsXH.png" group-title="DOCUMENTARIOS",DISCOVERY WORLD  HD **
+http://165.227.67.52/discoveryworldhd/tracks-v1a1/index.m3u8?pxAuth=tYkHzyxo1nJ19l9SA3CTtoCpCx1AHQfS
+#EXTINF:-1 tvg-id="DiscoveryCivilization.br" tvg-name="DISCOVERY CIVILIZATION **" tvg-logo="http://i.imgur.com/dN249KE.png" group-title="DOCUMENTARIOS",DISCOVERY CIVILIZATION **
+http://159.203.66.6/yxydiscoverycivilization/tracks-v1a1/index.m3u8?pxAuth=nmmFVnbPEiDwqISbumcJY0qcVKgnZdjU
+#EXTINF:-1 tvg-id="DiscoveryScience.br" tvg-name="DISCOVERY SCIENCE **" tvg-logo="http://i.imgur.com/Dx49y4f.png" group-title="DOCUMENTARIOS",DISCOVERY SCIENCE **
+http://185.181.102.3:8081/live/105/chunks.m3u8?nimblesessionid=9187713&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6Mzk6MzggQU0maGFzaF92YWx1ZT02ZGlOTUtkcG1NRUZWWWVVWWpBWTBBPT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="Natgeowildhd.br" tvg-name="NAT GEO HD **" tvg-logo="https://s16.postimg.org/p7ce9i39x/natgeo.png" group-title="DOCUMENTARIOS",NAT GEO HD **
+http://165.227.67.52/natgeowild/tracks-v1a1/index.m3u8?pxAuth=Xfu3uS2HqjFQoUPmQtqrN41bhPF2aTVs
+#EXTINF:-1 tvg-id="Nationalgeographic.br" tvg-name="NATIONAL GEOGRAPHIC HD ***" tvg-logo="https://s16.postimg.org/p7ce9i39x/natgeo.png" group-title="DOCUMENTARIOS",NATIONAL GEOGRAPHIC HD ***
+http://185.181.102.3:8081/live/natgeo/chunks.m3u8?nimblesessionid=9187328&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6MzM6MTggQU0maGFzaF92YWx1ZT0zM1Y0MFd0UWdLSjI3RGNZditvMW5RPT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="Historychannel.br" tvg-name="HISTORY CHANNEL HD **" tvg-logo="http://img.elitehdbr.com/logos/history.png" group-title="DOCUMENTARIOS",HISTORY CHANNEL HD **
+http://185.181.102.3:8081/live/history/chunks.m3u8?nimblesessionid=9187230&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDE6MzE6MzIgQU0maGFzaF92YWx1ZT1mODJQY3Y4cW0wNVo5dEgyeHhwMjJnPT0mdmFsaWRtaW51dGVzPTEw
+#EXTINF:-1 tvg-id="H2.br" tvg-name="H2 HD **" tvg-logo="http://i.imgur.com/jhiD9Wc.png" group-title="DOCUMENTARIOS",H2 HD **
+http://159.203.66.6/h2/tracks-v1a1/index.m3u8?pxAuth=EruCn4I6eCVT1nXXGqdOWRmIOW8OUeFT
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/6/69/NASA_logo.svg" group-title="Internacional",NASA TV
-https://ntv1.ntvcdn.com/NASA_576p.m3u8
+####################### SPORT ############################
 
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/8/8c/Bloomberg_logo.svg" group-title="Internacional",Bloomberg
-https://bloomberg.com/media-manifest/streams/us.m3u8
+#EXTINF:-1 tvg-id="Sportv.br" tvg-name="SPORTV HD **" tvg-logo="http://img.elitehdbr.com/logos/sportv.png" group-title="ESPORTES",SPORTV HD **
+http://188.166.19.208/loadbalance/slv0_bkp/chunks.m3u8?pxAuth=gA3eA2N7b7GcLZRFsDtK8O8NSIoyT9ob
+#EXTINF:-1 tvg-id="Sportv2.br" tvg-name="SPORTV 2 HD **" tvg-logo="http://img.elitehdbr.com/logos/sportv2.png" group-title="ESPORTES",SPORTV 2 HD **
+http://cdn.widestream.io:8081/wideedge1/ch02-1/chunks.m3u8?nimblesessionid=7069691&wmsAuthSign=c2VydmVyX3RpbWU9MTAvOC8yMDE3IDI6MDI6MDEgQU0maGFzaF92YWx1ZT1kUmhpQVRwTUJtNmlKTG9yZ2Fob0hRPT0mdmFsaWRtaW51dGVzPTIw
+
+################### FILMES ########################
+
+#EXTINF:-1 tvg-id="Tcpipoca.br" tvg-name="TELECINE PIPOCA HD **" tvg-logo="http://i.imgur.com/lfOS7gF.png" group-title="FILMES",TELECINE PIPOCA HD
+http://159.203.66.6/telecinepipoca/tracks-v1a1/index.m3u8?pxAuth=0DZdmROLGFwTm3I4Aqdn09vrR2oyUBov
+#EXTINF:-1 tvg-id="Tcpremium.br" tvg-name="TELECINE PREMIUM **" tvg-logo="http://i.imgur.com/aMWCWA0.png" group-title="FILMES",TELECINE PREMIUM
+http://165.227.100.253/telecinepremium/tracks-v1a1/index.m3u8?pxAuth=yVIyBzJVT6DDJCnKsRTmkFyTn62ep9ZK
+#EXTINF:-1 tvg-id="Tcaction.br" tvg-name="TELECINE ACTION SD" tvg-logo="http://i.imgur.com/Lx3R36Y.png" group-title="FILMES",TELECINE ACTION
+http://159.203.66.6/telecineaction/tracks-v1a1/index.m3u8?pxAuth=GzxdwdU2JkzUCd31YOpi0rOeVBfwQyD6
+#EXTINF:-1 tvg-id="Tcfun.br" tvg-name="TELECINE FUN HD **" tvg-logo="http://i.imgur.com/ltpUjbD.png" group-title="FILMES",TELECINE FUN HD 
+http://165.227.100.253/telecinefun/tracks-v1a1/index.m3u8?pxAuth=6jA3wwtRsyZl8z8obfHpHtbtCXSA8YjP
+#EXTINF:-1 tvg-id="Tctouch.br" tvg-name="TELECINE TOUCH HD **" tvg-logo="http://i.imgur.com/849pB2j.png" group-title="FILMES",TELECINE TOUCH
+http://159.203.66.6/telecinetouch/tracks-v1a1/index.m3u8?pxAuth=vka9o1D2DHfGJPzMfJA6EHMGs2Jw7vTd
+#EXTINF:-1 tvg-id="Hbo.br" tvg-name="HBO HD **" tvg-logo="https://s19.postimg.org/q1hn2aqrn/HBO.png" group-title="FILMES",HBO HD
+http://165.227.100.253/hbo2/tracks-v1a1/index.m3u8?pxAuth=klaBCicXdOUibkn0mzfD51EfdiUnVnFF
