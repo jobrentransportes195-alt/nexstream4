@@ -8,25 +8,52 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
+    // 🔥 Pega sessão atual
+    const getSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_, session) => {
+      if (!error) {
+        setUser(data.session?.user ?? null);
+      }
+
+      setLoading(false);
+    };
+
+    getSession();
+
+    // 🔥 Escuta mudanças de login/logout
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
         setUser(session?.user ?? null);
       }
     );
 
     return () => {
-      listener.subscription.unsubscribe();
+      authListener.subscription.unsubscribe();
     };
   }, []);
 
-  if (loading) return <div>Carregando...</div>;
+  // 🔥 Tela de carregamento
+  if (loading) {
+    return (
+      <div style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        background: "#0a0a0a",
+        color: "white"
+      }}>
+        Carregando...
+      </div>
+    );
+  }
 
-  if (!user) return <Login />;
+  // 🔐 Se não tiver usuário → Login
+  if (!user) {
+    return <Login />;
+  }
 
+  // 🎬 Se tiver usuário → Home
   return <Home />;
 }
