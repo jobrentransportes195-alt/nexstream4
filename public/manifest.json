@@ -1,10 +1,10 @@
 {
   "name": "NexStream",
   "short_name": "NexStream",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#05090f",
-  "theme_color": "#0a1a2f",
+  "theme_color": "#00a12f",
   "orientation": "portrait",
   "icons": [
     {
