@@ -1,87 +1,50 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { supabase } from "../services/supabase";
 
-interface LoginProps {
-  onLogin: (user: any, isAdmin: boolean) => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password: password.trim(),
+  async function handleLogin() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    if (error) {
-      alert(error.message);
-      setLoading(false);
-      return;
-    }
+    if (error) alert(error.message);
+  }
 
-    if (data.user) {
-      onLogin(
-        {
-          id: data.user.id,
-          email: data.user.email,
-        },
-        false
-      );
-    }
+  async function handleRegister() {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
-    setLoading(false);
-  };
+    if (error) alert(error.message);
+    else alert("Conta criada! Verifique seu email.");
+  }
 
   return (
-    <div style={{ padding: 30 }}>
-      <h2>Login</h2>
+    <div style={{ padding: 30, textAlign: "center" }}>
+      <h1>NexStream Login</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 10 }}>
-          <input
-            type="email"
-            placeholder="Digite seu email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ padding: 8, width: "100%" }}
-          />
-        </div>
+      <input
+        placeholder="Email"
+        onChange={e => setEmail(e.target.value)}
+        style={{ display: "block", margin: "10px auto", padding: 10 }}
+      />
 
-        <div style={{ marginBottom: 10 }}>
-          <input
-            type="password"
-            placeholder="Digite sua senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ padding: 8, width: "100%" }}
-          />
-        </div>
+      <input
+        placeholder="Senha"
+        type="password"
+        onChange={e => setPassword(e.target.value)}
+        style={{ display: "block", margin: "10px auto", padding: 10 }}
+      />
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            padding: 10,
-            width: "100%",
-            background: "#1e40af",
-            color: "#fff",
-            border: "none",
-            borderRadius: 4,
-          }}
-        >
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+      <button onClick={handleLogin}>Entrar</button>
+      <button onClick={handleRegister}>Criar Conta</button>
     </div>
   );
-};
+}
 
 export default Login;
