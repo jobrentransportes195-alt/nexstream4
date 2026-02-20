@@ -1,32 +1,74 @@
 body {
   margin: 0;
-  background: #111;
+  background: #080d1a; /* Azul bem escuro para parecer premium */
   color: white;
-  font-family: Arial;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  overflow: hidden; /* Evita barras de rolagem desnecessárias */
 }
 
 .header {
-  background: black;
-  padding: 15px;
-  color: red;
-  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: transparent;
 }
 
+.logo {
+  color: #ff0000;
+  font-size: 24px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* O segredo: Definimos 3 colunas principais */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 15px;
-  padding: 20px;
+  grid-template-columns: 1.2fr 1fr 1fr; 
+  grid-template-rows: 250px 180px; /* Duas linhas de alturas diferentes */
+  gap: 20px;
+  padding: 0 40px;
 }
 
 .card {
-  background: #222;
-  padding: 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: 0.3s ease;
+  text-align: center;
 }
 
+/* Efeito de destaque ao passar o mouse */
 .card:hover {
-  background: red;
+  transform: scale(1.03);
+  border-color: white;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+/* Card Principal (TV AO VIVO) - Ocupa as duas linhas verticalmente */
+.card-live {
+  grid-row: span 2; 
+  background: linear-gradient(135deg, #a832f5, #53128c);
+}
+
+/* Card de Filmes */
+.card-movies {
+  background: linear-gradient(135deg, #f53232, #8c1212);
+}
+
+/* Card de Séries */
+.card-series {
+  background: linear-gradient(135deg, #328af5, #123e8c);
+}
+
+/* Cards Pequenos de Baixo */
+.card-small {
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
