@@ -14,34 +14,57 @@ function Home() {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  /* ========= IMPORTAR PLAYLIST ========= */
+  function handlePlaylistUpload(file: File) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const text = e.target?.result as string;
+      localStorage.setItem("customPlaylist", text);
+      loadPlaylist(text);
+    };
+
+    reader.readAsText(file);
+  }
+
+  function loadPlaylist(text: string) {
+    const lines = text.split("\n");
+    const items: Channel[] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith("#EXTINF")) {
+        const info = lines[i];
+        const name = info.split(",")[1] || "Canal";
+
+        const groupMatch = info.match(/group-title="(.*?)"/);
+        const group = groupMatch ? groupMatch[1] : "Outros";
+
+        const logoMatch = info.match(/tvg-logo="(.*?)"/);
+        const logo = logoMatch ? logoMatch[1] : undefined;
+
+        const url = lines[i + 1];
+
+        items.push({ name, url, group, logo });
+      }
+    }
+
+    setChannels(items);
+  }
+
+  /* ========= LOAD INICIAL ========= */
   useEffect(() => {
-    fetch("/lista.m3u")
-      .then(res => res.text())
-      .then(text => {
-        const lines = text.split("\n");
-        const items: Channel[] = [];
+    const saved = localStorage.getItem("customPlaylist");
 
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].startsWith("#EXTINF")) {
-            const info = lines[i];
-            const name = info.split(",")[1] || "Canal";
-
-            const groupMatch = info.match(/group-title="(.*?)"/);
-            const group = groupMatch ? groupMatch[1] : "Outros";
-
-            const logoMatch = info.match(/tvg-logo="(.*?)"/);
-            const logo = logoMatch ? logoMatch[1] : undefined;
-
-            const url = lines[i + 1];
-
-            items.push({ name, url, group, logo });
-          }
-        }
-
-        setChannels(items);
-      });
+    if (saved) {
+      loadPlaylist(saved);
+    } else {
+      fetch("/lista.m3u")
+        .then(res => res.text())
+        .then(text => loadPlaylist(text));
+    }
   }, []);
 
+  /* ========= PLAYER ========= */
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
       const video = videoRef.current;
@@ -63,6 +86,21 @@ function Home() {
 
       <header className="premium-header">
         <h1>NexStream</h1>
+
+        {/* BOTÃO IMPORTAR */}
+        <label className="import-btn">
+          📂 Importar Playlist
+          <input
+            type="file"
+            accept=".m3u"
+            hidden
+            onChange={(e) => {
+              if (e.target.files?.[0]) {
+                handlePlaylistUpload(e.target.files[0]);
+              }
+            }}
+          />
+        </label>
       </header>
 
       {!selectedCategory ? (
@@ -108,7 +146,6 @@ function Home() {
           <video ref={videoRef} controls autoPlay />
         </div>
       )}
-
     </div>
   );
 }
