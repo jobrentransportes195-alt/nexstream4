@@ -112,10 +112,6 @@ function Home() {
       </button>
     )}
   </div>
-
-</div>
-)}
-/>
       <input
         placeholder="Buscar canal..."
         className="search"
