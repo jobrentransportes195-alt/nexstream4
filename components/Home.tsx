@@ -234,6 +234,21 @@ function Home() {
           </div>
         </div>
       )}
+.mini-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,0,0,0.7);
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.mini-player video {
+  width: 100%;
+}
     </div>
   );
 }
