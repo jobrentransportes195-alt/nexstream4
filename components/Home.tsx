@@ -10,281 +10,112 @@ interface Channel {
 
 function Home() {
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [search, setSearch] = useState("");
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [lastChannel, setLastChannel] = useState<Channel | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [miniPlayer, setMiniPlayer] = useState(false);
-
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  /* =========================
-     PLAYLIST UPLOAD
-  ========================== */
-  function handlePlaylistUpload(file: File) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const text = e.target?.result as string;
-      localStorage.setItem("customPlaylist", text);
-      window.location.reload();
-    };
-    reader.readAsText(file);
-  }
+  /* ================= PLAYLIST LOAD ================= */
 
-  function restoreDefaultPlaylist() {
-    localStorage.removeItem("customPlaylist");
-    window.location.reload();
-  }
-
-  /* =========================
-     LOAD DATA
-  ========================== */
   useEffect(() => {
-    const savedFav = localStorage.getItem("favorites");
-    if (savedFav) setFavorites(JSON.parse(savedFav));
+    fetch("/lista.m3u")
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.split("\n");
+        const items: Channel[] = [];
 
-    const savedLast = localStorage.getItem("lastChannel");
-    if (savedLast) setLastChannel(JSON.parse(savedLast));
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith("#EXTINF")) {
+            const info = lines[i];
+            const name = info.split(",")[1] || "Canal";
 
-    const savedPlaylist = localStorage.getItem("customPlaylist");
+            const groupMatch = info.match(/group-title="(.*?)"/);
+            const group = groupMatch ? groupMatch[1] : "Outros";
 
-    const loadPlaylist = (text: string) => {
-      const lines = text.split("\n").map(l => l.trim());
-      const items: Channel[] = [];
+            const url = lines[i + 1];
 
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith("#EXTINF")) {
-          const info = lines[i];
-          const name = (info.split(",")[1] || "Canal").trim();
-
-          const groupMatch = info.match(/group-title="(.*?)"/);
-          const group = groupMatch ? groupMatch[1] : "Outros";
-
-          const logoMatch = info.match(/tvg-logo="(.*?)"/);
-          const logo = logoMatch ? logoMatch[1] : undefined;
-
-          const url = (lines[i + 1] || "").trim();
-          if (url && !url.startsWith("#")) {
-            items.push({ name, url, group, logo });
+            items.push({ name, url, group });
           }
         }
-      }
 
-      setChannels(items);
-    };
-
-    if (savedPlaylist) {
-      loadPlaylist(savedPlaylist);
-    } else {
-      fetch("/lista.m3u")
-        .then(res => res.text())
-        .then(text => loadPlaylist(text))
-        .catch(() => setChannels([]));
-    }
+        setChannels(items);
+      });
   }, []);
 
-  /* =========================
-     PLAYER
-  ========================== */
+  /* ================= PLAYER ================= */
+
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
       const video = videoRef.current;
-      setLoading(true);
 
-      if (Hls.isSupported() && selectedChannel.url.includes(".m3u8")) {
+      if (Hls.isSupported()) {
         const hls = new Hls();
         hls.loadSource(selectedChannel.url);
         hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-          setLoading(false);
-        });
       } else {
         video.src = selectedChannel.url;
-        video.onloadeddata = () => setLoading(false);
       }
-
-      localStorage.setItem("lastChannel", JSON.stringify(selectedChannel));
-      setLastChannel(selectedChannel);
     }
   }, [selectedChannel]);
 
-  function toggleFavorite(url: string) {
-    const updated = favorites.includes(url)
-      ? favorites.filter(f => f !== url)
-      : [...favorites, url];
+  const categories = [...new Set(channels.map(c => c.group))];
 
-    setFavorites(updated);
-    localStorage.setItem("favorites", JSON.stringify(updated));
+  /* ================= UI ================= */
+
+  if (!selectedCategory) {
+    return (
+      <div className="smart-container">
+
+        <h1 className="smart-title">NexStream</h1>
+
+        <div className="smart-grid">
+          {categories.map(cat => (
+            <div
+              key={cat}
+              className="smart-card"
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </div>
+          ))}
+        </div>
+
+      </div>
+    );
   }
 
-  const filtered = channels.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const groups = [...new Set(filtered.map(c => c.group))];
-
-  /* =========================
-     UI
-  ========================== */
   return (
-    <div className="container">
+    <div className="smart-container">
 
-      <div className="banner">
-        <div className="banner-content">
-          <h1>NexStream</h1>
-          <p>IPTV Premium Experience</p>
+      <button
+        className="back-btn"
+        onClick={() => setSelectedCategory(null)}
+      >
+        ← Voltar
+      </button>
 
-          {lastChannel && (
-            <button
-              className="play-banner-btn"
-              onClick={() => {
-                setSelectedChannel(lastChannel);
-                setMiniPlayer(false);
-              }}
+      <h2 className="category-title">{selectedCategory}</h2>
+
+      <div className="channel-grid">
+        {channels
+          .filter(c => c.group === selectedCategory)
+          .map((ch, i) => (
+            <div
+              key={i}
+              className="channel-card"
+              onClick={() => setSelectedChannel(ch)}
             >
-              ▶ Continuar Assistindo
-            </button>
-          )}
-        </div>
+              {ch.name}
+            </div>
+          ))}
       </div>
 
-      <input
-        placeholder="Buscar canal..."
-        className="search"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
-
-      {/* UPLOAD PLAYLIST */}
-      <div style={{ textAlign: "center", marginTop: "15px" }}>
-        <label className="upload-btn">
-          📂 Enviar Playlist M3U
-          <input
-            type="file"
-            accept=".m3u"
-            hidden
-            onChange={(e) => {
-              if (e.target.files?.[0]) {
-                handlePlaylistUpload(e.target.files[0]);
-              }
-            }}
-          />
-        </label>
-
-        <div style={{ marginTop: "10px" }}>
-          <button onClick={restoreDefaultPlaylist}>
-            🔄 Restaurar Lista Padrão
-          </button>
-        </div>
-      </div>
-
-      {/* FAVORITOS */}
-      {favorites.length > 0 && (
-        <>
-          <h2 className="category-title">❤️ Meus Favoritos</h2>
-          <div className="horizontal-scroll">
-            {channels
-              .filter(c => favorites.includes(c.url))
-              .map((ch, i) => (
-                <div key={i} className="channel-card">
-                  <div
-                    className="card-image"
-                    onClick={() => {
-                      setSelectedChannel(ch);
-                      setMiniPlayer(false);
-                    }}
-                  >
-                    {ch.logo && <img src={ch.logo} alt={ch.name} />}
-                    <div className="overlay-play">▶</div>
-                    <div className="live-badge">AO VIVO</div>
-                  </div>
-
-                  <p>{ch.name}</p>
-
-                  <button
-                    className="fav-btn"
-                    onClick={() => toggleFavorite(ch.url)}
-                  >
-                    ❤️
-                  </button>
-                </div>
-              ))}
-          </div>
-        </>
-      )}
-
-      {/* CATEGORIAS */}
-      {groups.map(group => (
-        <div key={group}>
-          <h2 className="category-title">{group}</h2>
-          <div className="horizontal-scroll">
-            {filtered
-              .filter(c => c.group === group)
-              .map((ch, i) => (
-                <div key={i} className="channel-card">
-                  <div
-                    className="card-image"
-                    onClick={() => {
-                      setSelectedChannel(ch);
-                      setMiniPlayer(false);
-                    }}
-                  >
-                    {ch.logo && <img src={ch.logo} alt={ch.name} />}
-                    <div className="overlay-play">▶</div>
-                    <div className="live-badge">AO VIVO</div>
-                  </div>
-
-                  <p>{ch.name}</p>
-
-                  <button
-                    className="fav-btn"
-                    onClick={() => toggleFavorite(ch.url)}
-                  >
-                    {favorites.includes(ch.url) ? "❤️" : "🤍"}
-                  </button>
-                </div>
-              ))}
-          </div>
-        </div>
-      ))}
-
-      {/* PLAYER */}
       {selectedChannel && (
-        <div className="modal">
-          <div className="modal-content">
-            <button
-              className="close-btn"
-              onClick={() => {
-                setSelectedChannel(null);
-                setMiniPlayer(true);
-              }}
-            >
-              ✖
-            </button>
-
-            {loading && <div className="loader"></div>}
-
-            <video
-              ref={videoRef}
-              controls
-              style={{ width: "100%", borderRadius: "15px" }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* MINI PLAYER */}
-      {miniPlayer && lastChannel && (
-        <div
-          className="mini-player"
-          onClick={() => {
-            setSelectedChannel(lastChannel);
-            setMiniPlayer(false);
-          }}
-        >
-          <video src={lastChannel.url} autoPlay muted />
+        <div className="player-modal">
+          <video
+            ref={videoRef}
+            controls
+            autoPlay
+          />
         </div>
       )}
 
