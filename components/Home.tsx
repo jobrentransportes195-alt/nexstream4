@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
+useEffect(() => {
+  const saved = localStorage.getItem("savedPlaylist");
 
+  if (saved) {
+    parseM3U(saved);
+  }
+}, []);
 interface Channel {
   name: string;
   url: string;
