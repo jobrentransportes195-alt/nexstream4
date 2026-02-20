@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./services/supabase";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import AdminPanel from "./components/AdminPanel";
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // ==========================
-  // PEGAR SESSÃO
-  // ==========================
   useEffect(() => {
     const getSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -44,9 +43,6 @@ export default function App() {
     };
   }, []);
 
-  // ==========================
-  // BUSCAR PROFILE
-  // ==========================
   async function fetchProfile(userId: string) {
     const { data } = await supabase
       .from("profiles")
@@ -57,56 +53,21 @@ export default function App() {
     setProfile(data);
   }
 
-  // ==========================
-  // BLOQUEIO AUTOMÁTICO
-  // ==========================
-  function isBlocked() {
-    if (!profile) return false;
-
-    if (profile.blocked) return true;
-
-    if (profile.expires_at) {
-      const now = new Date();
-      const expire = new Date(profile.expires_at);
-      if (expire < now) return true;
-    }
-
-    return false;
-  }
-
-  if (loading) {
-    return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0a0a0a",
-        color: "white"
-      }}>
-        Carregando...
-      </div>
-    );
-  }
-
+  if (loading) return <div>Carregando...</div>;
   if (!user) return <Login />;
 
-  if (isBlocked()) {
-    return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0a0a0a",
-        color: "white",
-        flexDirection: "column"
-      }}>
-        <h2>🚫 Plano Expirado ou Conta Bloqueada</h2>
-        <p>Entre em contato para renovar seu acesso.</p>
-      </div>
-    );
-  }
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
 
-  return <Home profile={profile} />;
+      <Route
+        path="/admin"
+        element={
+          profile?.role === "admin"
+            ? <AdminPanel />
+            : <Navigate to="/" />
+        }
+      />
+    </Routes>
+  );
 }
