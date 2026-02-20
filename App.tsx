@@ -2,29 +2,39 @@ import { useEffect, useState } from "react";
 import { supabase } from "./services/supabase";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import AdminPanel from "./components/AdminPanel";
 
 export default function App() {
   const [user, setUser] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 🔥 Pega sessão atual
-    const getSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
+    const initAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      const sessionUser = data.session?.user ?? null;
 
-      if (!error) {
-        setUser(data.session?.user ?? null);
+      setUser(sessionUser);
+
+      if (sessionUser) {
+        await fetchProfile(sessionUser.id);
       }
 
       setLoading(false);
     };
 
-    getSession();
+    initAuth();
 
-    // 🔥 Escuta mudanças de login/logout
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
+      async (_event, session) => {
+        const sessionUser = session?.user ?? null;
+        setUser(sessionUser);
+
+        if (sessionUser) {
+          await fetchProfile(sessionUser.id);
+        } else {
+          setProfile(null);
+        }
       }
     );
 
@@ -33,27 +43,42 @@ export default function App() {
     };
   }, []);
 
-  // 🔥 Tela de carregamento
+  async function fetchProfile(userId: string) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle();
+
+    setProfile(data);
+  }
+
   if (loading) {
     return (
-      <div style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0a0a0a",
-        color: "white"
-      }}>
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          background: "#0a0a0a",
+          color: "white"
+        }}
+      >
         Carregando...
       </div>
     );
   }
 
-  // 🔐 Se não tiver usuário → Login
   if (!user) {
     return <Login />;
   }
 
-  // 🎬 Se tiver usuário → Home
+  // 👑 Se for admin → abre painel
+  if (profile?.role === "admin") {
+    return <AdminPanel />;
+  }
+
+  // 🎬 Usuário normal → Home
   return <Home />;
 }
