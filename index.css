@@ -236,3 +236,6 @@ body {
 body {
   background: radial-gradient(circle at top, #0a1a2f, #05090f 70%) !important;
 }
+body {
+  background: red !important;
+}
