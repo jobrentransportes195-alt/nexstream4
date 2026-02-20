@@ -72,10 +72,6 @@ function Home() {
 
       localStorage.setItem("lastChannel", JSON.stringify(selectedChannel));
       setLastChannel(selectedChannel);
-
-      setTimeout(() => {
-        video.requestFullscreen?.();
-      }, 500);
     }
   }, [selectedChannel]);
 
@@ -97,21 +93,26 @@ function Home() {
   const groups = [...new Set(filtered.map(c => c.group))];
 
   return (
-    <div className="banner">
+    <div className="container">
 
-  <div className="banner-content">
-    <h1>NexStream</h1>
-    <p>IPTV Premium Experience</p>
+      {/* 🔥 BANNER */}
+      <div className="banner">
+        <div className="banner-content">
+          <h1>NexStream</h1>
+          <p>IPTV Premium Experience</p>
 
-    {lastChannel && (
-      <button
-        className="play-banner-btn"
-        onClick={() => setSelectedChannel(lastChannel)}
-      >
-        ▶ Continuar Assistindo
-      </button>
-    )}
-  </div>
+          {lastChannel && (
+            <button
+              className="play-banner-btn"
+              onClick={() => setSelectedChannel(lastChannel)}
+            >
+              ▶ Continuar Assistindo
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🔎 BUSCA */}
       <input
         placeholder="Buscar canal..."
         className="search"
@@ -119,7 +120,7 @@ function Home() {
         onChange={e => setSearch(e.target.value)}
       />
 
-      {/* 🔥 FAVORITOS NO TOPO */}
+      {/* ❤️ FAVORITOS */}
       {favorites.length > 0 && (
         <>
           <h2 className="category-title">❤️ Meus Favoritos</h2>
@@ -128,19 +129,21 @@ function Home() {
               .filter(c => favorites.includes(c.url))
               .map((ch, i) => (
                 <div
-  key={i}
-  className={`channel-card ${
-    selectedChannel?.url === ch.url ? "active-channel" : ""
-  }`}
->
+                  key={i}
+                  className={`channel-card ${
+                    selectedChannel?.url === ch.url ? "active-channel" : ""
+                  }`}
+                >
+                  <div
+                    className="card-image"
+                    onClick={() => setSelectedChannel(ch)}
+                  >
+                    <div className="live-badge">AO VIVO</div>
 
-                  {ch.logo && (
-                    <img
-                      src={ch.logo}
-                      alt={ch.name}
-                      onClick={() => setSelectedChannel(ch)}
-                    />
-                  )}
+                    <img src={ch.logo} alt={ch.name} />
+
+                    <div className="overlay-play">▶</div>
+                  </div>
 
                   <p>{ch.name}</p>
 
@@ -150,7 +153,6 @@ function Home() {
                   >
                     ❤️
                   </button>
-
                 </div>
               ))}
           </div>
@@ -166,15 +168,22 @@ function Home() {
             {filtered
               .filter(c => c.group === group)
               .map((ch, i) => (
-                <div key={i} className="channel-card">
-                  
-                  {ch.logo && (
-                    <img
-                      src={ch.logo}
-                      alt={ch.name}
-                      onClick={() => setSelectedChannel(ch)}
-                    />
-                  )}
+                <div
+                  key={i}
+                  className={`channel-card ${
+                    selectedChannel?.url === ch.url ? "active-channel" : ""
+                  }`}
+                >
+                  <div
+                    className="card-image"
+                    onClick={() => setSelectedChannel(ch)}
+                  >
+                    <div className="live-badge">AO VIVO</div>
+
+                    <img src={ch.logo} alt={ch.name} />
+
+                    <div className="overlay-play">▶</div>
+                  </div>
 
                   <p>{ch.name}</p>
 
@@ -184,13 +193,13 @@ function Home() {
                   >
                     {favorites.includes(ch.url) ? "❤️" : "🤍"}
                   </button>
-
                 </div>
               ))}
           </div>
         </div>
       ))}
 
+      {/* 🎬 PLAYER */}
       {selectedChannel && (
         <div className="modal fade-in">
           <div className="modal-content">
@@ -211,7 +220,6 @@ function Home() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
