@@ -14,8 +14,6 @@ function Home() {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  /* ================= PLAYLIST LOAD ================= */
-
   useEffect(() => {
     fetch("/lista.m3u")
       .then(res => res.text())
@@ -31,17 +29,18 @@ function Home() {
             const groupMatch = info.match(/group-title="(.*?)"/);
             const group = groupMatch ? groupMatch[1] : "Outros";
 
+            const logoMatch = info.match(/tvg-logo="(.*?)"/);
+            const logo = logoMatch ? logoMatch[1] : undefined;
+
             const url = lines[i + 1];
 
-            items.push({ name, url, group });
+            items.push({ name, url, group, logo });
           }
         }
 
         setChannels(items);
       });
   }, []);
-
-  /* ================= PLAYER ================= */
 
   useEffect(() => {
     if (selectedChannel && videoRef.current) {
@@ -59,63 +58,54 @@ function Home() {
 
   const categories = [...new Set(channels.map(c => c.group))];
 
-  /* ================= UI ================= */
+  return (
+    <div className="premium-container">
 
-  if (!selectedCategory) {
-    return (
-      <div className="smart-container">
+      <header className="premium-header">
+        <h1>NexStream</h1>
+      </header>
 
-        <h1 className="smart-title">NexStream</h1>
-
-        <div className="smart-grid">
+      {!selectedCategory ? (
+        <div className="premium-grid">
           {categories.map(cat => (
             <div
               key={cat}
-              className="smart-card"
+              className="premium-card"
               onClick={() => setSelectedCategory(cat)}
             >
-              {cat}
+              <div className="card-overlay">
+                <h2>{cat}</h2>
+              </div>
             </div>
           ))}
         </div>
+      ) : (
+        <>
+          <button className="back-btn" onClick={() => setSelectedCategory(null)}>
+            ← Voltar
+          </button>
 
-      </div>
-    );
-  }
-
-  return (
-    <div className="smart-container">
-
-      <button
-        className="back-btn"
-        onClick={() => setSelectedCategory(null)}
-      >
-        ← Voltar
-      </button>
-
-      <h2 className="category-title">{selectedCategory}</h2>
-
-      <div className="channel-grid">
-        {channels
-          .filter(c => c.group === selectedCategory)
-          .map((ch, i) => (
-            <div
-              key={i}
-              className="channel-card"
-              onClick={() => setSelectedChannel(ch)}
-            >
-              {ch.name}
-            </div>
-          ))}
-      </div>
+          <div className="channel-grid">
+            {channels
+              .filter(c => c.group === selectedCategory)
+              .map((ch, i) => (
+                <div
+                  key={i}
+                  className="channel-card"
+                  onClick={() => setSelectedChannel(ch)}
+                >
+                  {ch.logo && <img src={ch.logo} alt={ch.name} />}
+                  <span>{ch.name}</span>
+                </div>
+              ))}
+          </div>
+        </>
+      )}
 
       {selectedChannel && (
-        <div className="player-modal">
-          <video
-            ref={videoRef}
-            controls
-            autoPlay
-          />
+        <div className="player-fullscreen">
+          <button className="close-player" onClick={() => setSelectedChannel(null)}>✖</button>
+          <video ref={videoRef} controls autoPlay />
         </div>
       )}
 
