@@ -45,8 +45,17 @@ function Home() {
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const categories = [...new Set(filtered.map(c => c.group))];
+
   return (
     <div className="container">
+      {/* 🔥 Banner Principal */}
+      <div className="hero">
+        <h1>TV Ao Vivo</h1>
+        <p>Assista seus canais favoritos em alta qualidade</p>
+      </div>
+
+      {/* 🔍 Busca */}
       <input
         placeholder="Buscar canal..."
         className="search"
@@ -54,26 +63,35 @@ function Home() {
         onChange={e => setSearch(e.target.value)}
       />
 
-      <div className="grid">
-        {filtered.map((ch, i) => (
-          <div
-            key={i}
-            className="card"
-            onClick={() =>
-              navigate(`/player/${encodeURIComponent(ch.url)}`)
-            }
-          >
-            {ch.logo && (
-              <img
-                src={ch.logo}
-                alt={ch.name}
-                className="channel-logo"
-              />
-            )}
-            <div className="channel-name">{ch.name}</div>
+      {/* 📂 Categorias */}
+      {categories.map(category => (
+        <div key={category}>
+          <h2 className="category-title">{category}</h2>
+
+          <div className="horizontal-scroll">
+            {filtered
+              .filter(c => c.group === category)
+              .map((ch, i) => (
+                <div
+                  key={i}
+                  className="card"
+                  onClick={() =>
+                    navigate(`/player/${encodeURIComponent(ch.url)}`)
+                  }
+                >
+                  {ch.logo && (
+                    <img
+                      src={ch.logo}
+                      alt={ch.name}
+                      className="channel-logo"
+                    />
+                  )}
+                  <div className="channel-name">{ch.name}</div>
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
