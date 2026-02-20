@@ -236,3 +236,41 @@ body {
   color: white;
   cursor: pointer;
 }
+.container {
+  background: #0a0f1c;
+  min-height: 100vh;
+  color: white;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  background: linear-gradient(90deg,#ff00cc,#3333ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 30px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.menu-card {
+  background: linear-gradient(145deg,#1c2233,#141a29);
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu-card:hover {
+  transform: scale(1.05);
+  background: linear-gradient(145deg,#ff00cc,#3333ff);
+}
