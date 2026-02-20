@@ -18,63 +18,71 @@ function Home() {
   const [miniPlayer, setMiniPlayer] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-function handlePlaylistUpload(file: File) {
-  const reader = new FileReader();
 
-  reader.onload = function (e) {
-    const text = e.target?.result as string;
-    localStorage.setItem("customPlaylist", text);
+  /* =========================
+     PLAYLIST UPLOAD
+  ========================== */
+  function handlePlaylistUpload(file: File) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const text = e.target?.result as string;
+      localStorage.setItem("customPlaylist", text);
+      window.location.reload();
+    };
+    reader.readAsText(file);
+  }
+
+  function restoreDefaultPlaylist() {
+    localStorage.removeItem("customPlaylist");
     window.location.reload();
-  };
+  }
 
-  reader.readAsText(file);
-}
   /* =========================
      LOAD DATA
   ========================== */
   useEffect(() => {
-  const savedFav = localStorage.getItem("favorites");
-  if (savedFav) setFavorites(JSON.parse(savedFav));
+    const savedFav = localStorage.getItem("favorites");
+    if (savedFav) setFavorites(JSON.parse(savedFav));
 
-  const savedLast = localStorage.getItem("lastChannel");
-  if (savedLast) setLastChannel(JSON.parse(savedLast));
+    const savedLast = localStorage.getItem("lastChannel");
+    if (savedLast) setLastChannel(JSON.parse(savedLast));
 
-  const savedPlaylist = localStorage.getItem("customPlaylist");
+    const savedPlaylist = localStorage.getItem("customPlaylist");
 
-  const loadPlaylist = (text: string) => {
-    const lines = text.split("\n").map(l => l.trim());
-    const items: Channel[] = [];
+    const loadPlaylist = (text: string) => {
+      const lines = text.split("\n").map(l => l.trim());
+      const items: Channel[] = [];
 
-    for (let i = 0; i < lines.length; i++) {
-      if (lines[i].startsWith("#EXTINF")) {
-        const info = lines[i];
-        const name = (info.split(",")[1] || "Canal").trim();
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith("#EXTINF")) {
+          const info = lines[i];
+          const name = (info.split(",")[1] || "Canal").trim();
 
-        const groupMatch = info.match(/group-title="(.*?)"/);
-        const group = groupMatch ? groupMatch[1] : "Outros";
+          const groupMatch = info.match(/group-title="(.*?)"/);
+          const group = groupMatch ? groupMatch[1] : "Outros";
 
-        const logoMatch = info.match(/tvg-logo="(.*?)"/);
-        const logo = logoMatch ? logoMatch[1] : undefined;
+          const logoMatch = info.match(/tvg-logo="(.*?)"/);
+          const logo = logoMatch ? logoMatch[1] : undefined;
 
-        const url = (lines[i + 1] || "").trim();
-        if (url && !url.startsWith("#")) {
-          items.push({ name, url, group, logo });
+          const url = (lines[i + 1] || "").trim();
+          if (url && !url.startsWith("#")) {
+            items.push({ name, url, group, logo });
+          }
         }
       }
+
+      setChannels(items);
+    };
+
+    if (savedPlaylist) {
+      loadPlaylist(savedPlaylist);
+    } else {
+      fetch("/lista.m3u")
+        .then(res => res.text())
+        .then(text => loadPlaylist(text))
+        .catch(() => setChannels([]));
     }
-
-    setChannels(items);
-  };
-
-  if (savedPlaylist) {
-    loadPlaylist(savedPlaylist);
-  } else {
-    fetch("/lista.m3u")
-      .then(res => res.text())
-      .then(text => loadPlaylist(text))
-      .catch(() => setChannels([]));
-  }
-}, []);
+  }, []);
 
   /* =========================
      PLAYER
@@ -84,7 +92,7 @@ function handlePlaylistUpload(file: File) {
       const video = videoRef.current;
       setLoading(true);
 
-      if (Hls.isSupported()) {
+      if (Hls.isSupported() && selectedChannel.url.includes(".m3u8")) {
         const hls = new Hls();
         hls.loadSource(selectedChannel.url);
         hls.attachMedia(video);
@@ -103,12 +111,10 @@ function handlePlaylistUpload(file: File) {
   }, [selectedChannel]);
 
   function toggleFavorite(url: string) {
-    let updated;
-    if (favorites.includes(url)) {
-      updated = favorites.filter(f => f !== url);
-    } else {
-      updated = [...favorites, url];
-    }
+    const updated = favorites.includes(url)
+      ? favorites.filter(f => f !== url)
+      : [...favorites, url];
+
     setFavorites(updated);
     localStorage.setItem("favorites", JSON.stringify(updated));
   }
@@ -125,7 +131,6 @@ function handlePlaylistUpload(file: File) {
   return (
     <div className="container">
 
-      {/* BANNER */}
       <div className="banner">
         <div className="banner-content">
           <h1>NexStream</h1>
@@ -145,13 +150,35 @@ function handlePlaylistUpload(file: File) {
         </div>
       </div>
 
-      {/* SEARCH */}
       <input
         placeholder="Buscar canal..."
         className="search"
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
+
+      {/* UPLOAD PLAYLIST */}
+      <div style={{ textAlign: "center", marginTop: "15px" }}>
+        <label className="upload-btn">
+          📂 Enviar Playlist M3U
+          <input
+            type="file"
+            accept=".m3u"
+            hidden
+            onChange={(e) => {
+              if (e.target.files?.[0]) {
+                handlePlaylistUpload(e.target.files[0]);
+              }
+            }}
+          />
+        </label>
+
+        <div style={{ marginTop: "10px" }}>
+          <button onClick={restoreDefaultPlaylist}>
+            🔄 Restaurar Lista Padrão
+          </button>
+        </div>
+      </div>
 
       {/* FAVORITOS */}
       {favorites.length > 0 && (
@@ -192,7 +219,6 @@ function handlePlaylistUpload(file: File) {
       {groups.map(group => (
         <div key={group}>
           <h2 className="category-title">{group}</h2>
-
           <div className="horizontal-scroll">
             {filtered
               .filter(c => c.group === group)
@@ -224,7 +250,7 @@ function handlePlaylistUpload(file: File) {
         </div>
       ))}
 
-      {/* MODAL PLAYER */}
+      {/* PLAYER */}
       {selectedChannel && (
         <div className="modal">
           <div className="modal-content">
@@ -266,4 +292,4 @@ function handlePlaylistUpload(file: File) {
   );
 }
 
-export default Home; 
+export default Home;
