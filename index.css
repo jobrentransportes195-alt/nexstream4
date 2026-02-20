@@ -473,3 +473,12 @@ body {
   border: 1px solid rgba(255,255,255,.08);
   opacity: .9;
 }
+.upload-btn {
+  display: inline-block;
+  padding: 12px 18px;
+  background: linear-gradient(90deg, #00b4ff, #007bff);
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 180, 255, 0.4);
+}
