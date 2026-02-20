@@ -1,5 +1,22 @@
 #EXTM3U
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/6/6b/ABC_logo.svg" group-title="Notícias",Canal Público 1
-https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
-#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/5f/ESPN_wordmark.svg" group-title="Esporte",Canal Público 2
-https://test-streams.mux.dev/test_001/stream.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/5/5f/TV_Brasil_logo.svg" group-title="Brasil Abertos",TV Brasil
+https://tvbrasil-stream.ebc.com.br/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/2/2f/TV_Cultura_logo_2013.svg" group-title="Brasil Abertos",TV Cultura
+https://live-culture.hls.adaptive.level3.net/cultura/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/4/4b/RedeTV%21_logo.svg" group-title="Brasil Abertos",RedeTV
+https://tv01.zas.media:1936/redetv/redetv/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/08/TV_Gazeta_logo.png" group-title="Brasil Abertos",TV Gazeta
+https://gazeta-live.akamaized.net/hls/live/2036627/gazeta/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/3c/Record_News_logo_2019.svg" group-title="Noticias",Record News
+https://cdn.jmvstream.com/w/LVW-10801/LVW10801_1/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/6/69/NASA_logo.svg" group-title="Internacional",NASA TV
+https://ntv1.ntvcdn.com/NASA_576p.m3u8
+
+#EXTINF:-1 tvg-logo="https://upload.wikimedia.org/wikipedia/commons/8/8c/Bloomberg_logo.svg" group-title="Internacional",Bloomberg
+https://bloomberg.com/media-manifest/streams/us.m3u8
