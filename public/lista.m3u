@@ -61,4 +61,4 @@ http://165.227.100.253/telecinefun/tracks-v1a1/index.m3u8?pxAuth=6jA3wwtRsyZl8z8
 #EXTINF:-1 tvg-id="Tctouch.br" tvg-name="TELECINE TOUCH HD **" tvg-logo="http://i.imgur.com/849pB2j.png" group-title="FILMES",TELECINE TOUCH
 http://159.203.66.6/telecinetouch/tracks-v1a1/index.m3u8?pxAuth=vka9o1D2DHfGJPzMfJA6EHMGs2Jw7vTd
 #EXTINF:-1 tvg-id="Hbo.br" tvg-name="HBO HD **" tvg-logo="https://s19.postimg.org/q1hn2aqrn/HBO.png" group-title="FILMES",HBO HD
-http://165.227.100.253/hbo2/tracks-v1a1/index.m3u8?pxAuth=klaBCicXdOUibkn0mzfD51EfdiUnVnFF
+http://165.227.100.253/hbo2/tracks-v1a1/index.m3u8?pxAuth=klaBCicXdOUibkn0mzfD51EfdiUnVnFF 
