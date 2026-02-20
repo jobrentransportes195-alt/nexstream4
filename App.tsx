@@ -1,16 +1,5 @@
-import Header from "./components/Header";
+import Home from "./components/Home";
 
 export default function App() {
-  function fakeLogout() {
-    console.log("logout");
-  }
-
-  return (
-    <>
-      <Header onLogout={fakeLogout} />
-      <div style={{ marginTop: 120, color: "white" }}>
-        HEADER OK
-      </div>
-    </>
-  );
+  return <Home category="Home" />;
 }
