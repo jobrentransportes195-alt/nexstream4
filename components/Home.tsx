@@ -10,7 +10,8 @@ interface Channel {
 
 function Home() {
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [search, setSearch] = useState("");
+  const [miniPlayer, setMiniPlayer] = useState(false);
+const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [lastChannel, setLastChannel] = useState<Channel | null>(null);
