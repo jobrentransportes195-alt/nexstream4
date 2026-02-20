@@ -21,10 +21,9 @@ export default function Home({ category }: any) {
     const { data } = await query;
     setMovies(data || []);
   }
-
-  const filtered = movies.filter(m =>
-    m.title.toLowerCase().includes(search.toLowerCase())
-  );
+const filtered = movies.filter(m =>
+  m?.title?.toLowerCase()?.includes(search.toLowerCase())
+);
 
   return (
     <div style={{ paddingTop: 120, paddingLeft: 20 }}>
