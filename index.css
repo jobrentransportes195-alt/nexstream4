@@ -222,3 +222,16 @@ body {
     transform: translateY(0);
   }
 }
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(0,150,255,0.15), transparent 60%);
+  animation: moveBg 10s infinite alternate;
+  z-index: -1;
+}
+
+@keyframes moveBg {
+  from { transform: translate(0,0); }
+  to { transform: translate(-50px,-50px); }
+}
