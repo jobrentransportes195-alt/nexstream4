@@ -10,6 +10,7 @@ export default function App() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
 
+  // Escuta login
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null);
@@ -21,42 +22,55 @@ export default function App() {
       }
     );
 
-    return () => listener.subscription.unsubscribe();
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
+  // Busca perfil
   useEffect(() => {
     if (user) fetchProfile();
   }, [user]);
 
   async function fetchProfile() {
-    const { data } = await supabase
+    if (!user) return;
+
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
 
-    setProfile(data);
+    if (!error) {
+      setProfile(data);
+    }
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
   }
 
   return (
     <>
-      <Header user={user} profile={profile} />
+      <Header onLogout={handleLogout} />
 
       <Routes>
-  <Route path="/" element={<Home category="Home" />} />
-  <Route path="/filmes" element={<Home category="Filmes" />} />
-  <Route path="/series" element={<Home category="Séries" />} />
-  <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
+        <Route path="/" element={<Home category="Home" />} />
+        <Route path="/filmes" element={<Home category="Filmes" />} />
+        <Route path="/series" element={<Home category="Séries" />} />
+        <Route path="/filme/:id" element={<MoviePage profile={profile} />} />
 
-  <Route
-    path="/admin"
-    element={
-      profile?.role === "admin"
-        ? <AdminPanel />
-        : <Home category="Home" />
-    }
-  />
-</Routes>
+        <Route
+          path="/admin"
+          element={
+            profile?.role === "admin"
+              ? <AdminPanel />
+              : <Home category="Home" />
+          }
+        />
+      </Routes>
     </>
   );
-} 
+}
