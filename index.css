@@ -67,16 +67,19 @@ body {
 }
 
 .channel-card {
-  min-width: 170px;
-  background: #111827;
-  border-radius: 15px;
-  padding: 12px;
+  min-width: 180px;
+  background: linear-gradient(160deg, #0f172a, #111827);
+  border-radius: 18px;
+  padding: 14px;
   position: relative;
-  transition: 0.3s ease;
+  transition: 0.35s ease;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .channel-card:hover {
-  transform: scale(1.08);
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.7);
 }
 
 .active-channel {
