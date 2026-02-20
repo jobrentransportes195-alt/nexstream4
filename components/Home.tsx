@@ -97,19 +97,24 @@ function Home() {
   const groups = [...new Set(filtered.map(c => c.group))];
 
   return (
-    <div className="container">
+    <div className="banner">
 
-      <div className="hero">
-        <h1>NexStream</h1>
-        <p>IPTV Premium Experience</p>
-      </div>
+  <div className="banner-content">
+    <h1>NexStream</h1>
+    <p>IPTV Premium Experience</p>
 
-      {lastChannel && (
-        <div className="continue-box" onClick={() => setSelectedChannel(lastChannel)}>
-          <h3>Continuar assistindo</h3>
-          <p>{lastChannel.name}</p>
-        </div>
-      )}
+    {lastChannel && (
+      <button
+        className="play-banner-btn"
+        onClick={() => setSelectedChannel(lastChannel)}
+      >
+        ▶ Continuar Assistindo
+      </button>
+    )}
+  </div>
+
+</div>
+)}
 
       <input
         placeholder="Buscar canal..."
